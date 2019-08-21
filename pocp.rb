@@ -1,4 +1,6 @@
-#!/home/hoelzer/local/bin/ruby
+#!/usr/bin/env ruby
+#
+# Author: hoelzer.martin@gmail.com
 
 ###################################
 ## P.O.C.P - calculate percentage of conserved proteins
@@ -19,6 +21,7 @@
 # C2 represent the conserved number of proteins in the two genomes being compared, respectively, and T1 and T2
 # represent the total number of proteins in the two genomes being compared, respectively. In theory, the POCP
 # value can vary from 0% to 100%, depending on the similarity of the protein contents of two genomes.
+
 
 class Pocp
 
@@ -83,19 +86,69 @@ class Pocp
     puts "\t#{species1_bn}:\tFound #{c} matches with an E value of less than #{EVALUE}, a sequence identity of more than #{SEQ_IDENTITY*100}%, and an alignable region of the query protein sequence of more than #{ALN_LENGTH*100}%."
     c
   end
-
-
 end
 
-#species1_faa = '/home/hoelzer/RubymineProjects/pocp/Cga_08-1274-3.faa'
-#species2_faa = '/home/hoelzer/RubymineProjects/pocp/Cav_10DC88.faa'
-#out_dir = '/home/hoelzer/RubymineProjects/pocp/example'
-#threads = 6
-species1_faa = ARGV[0]
-species2_faa = ARGV[1]
-out_dir = ARGV[2]
-threads = ARGV[3]
-#./pocp.rb /mnt/prostlocal2/projects/chlamydia_comparative_study/lisa/prokka/Cav/Cav_10DC88.faa /mnt/prostlocal2/projects/chlamydia_comparative_study/lisa/prokka/Cps/Cps_02DC15.faa ~/pocp_example 6
-Pocp.new(species1_faa, species2_faa, out_dir, threads)
 
+fasta_dir = ARGV[0]
+out_dir = ARGV[1]
+threads = ARGV[2]
+
+strains = []
+
+Dir.glob(fasta_dir+"/*.faa").each do |fasta1|
+  species1_faa = fasta1
+  species1_name = File.basename(fasta1, '.faa')
+  Dir.glob(fasta_dir+"/*.faa").each do |fasta2|
+    species2_faa = fasta2
+    species2_name = File.basename(fasta2, '.faa')
+    out = "#{out_dir}/#{species1_name}-vs-#{species2_name}"
+    `mkdir -p #{out}`
+    Pocp.new(species1_faa, species2_faa, out, threads)
+    strains.push(species1_name) unless strains.include?(species1_name)
+    strains.push(species2_name) unless strains.include?(species2_name)
+  end
+end
+
+#ruby $DIR/matrix.rb "/home/hoelzer/projects/fabien_rsha_pocp/calc/flamingo" "14-2711_R47,15-2067_O50,15-2067_O99,Cav_10DC88,Cga_08-1274-3,Cps_6BC,Cab_S26-3,Cca_GPIC,Cfe_Fe-C56,Cpe_E58,Cpn_TW-183,Ctr_D-UW-3-CX,Cmu_Nigg,Csu_SWA-2,Cib_10-1398-6"
+## produce a matrix/excel format from the POCP script output
+pocps = {}
+
+Dir.glob("#{out_dir}/*-vs-*").each do |comp|
+	bn = File.basename(comp)
+  g1 = bn.split('-vs-')[0]
+  g2 = bn.split('-vs-')[1]
+
+  pocp = `grep POCP #{comp}/pocp.txt | awk 'BEGIN{FS=" "};{print $5}'`.chomp.strip
+
+  if pocps[g1]
+	  pocps[g1].push(g2,pocp)
+  else
+	  pocps[g1] = [g2,pocp]
+  end  
+  strains.push(g1) unless strains.include?(g1)
+  strains.push(g2) unless strains.include?(g2)
+end
+puts "read in POCP for #{strains.size} strains."
+
+out = File.open("#{out_dir}/#{File.basename(out_dir)}.csv",'w')
+out << 'ID,' << strains.join(',') << "\n"
+
+line_count = 0
+strains.each do |strain1|
+  out_line = strain1
+  line_count += 1
+  tmp_count = line_count
+	strains.each do |strain2|
+    tmp_count = tmp_count - 1
+    if tmp_count > 0 
+		  out_line += ","
+    else      
+	    comp = "#{strain1}-vs-#{strain2}"
+		  pocp = `grep POCP #{out_dir}/#{comp}/pocp.txt | awk 'BEGIN{FS=" "};{print $5}'`.chomp.strip
+			out_line += ",#{pocp}"
+    end    
+  end
+  out << out_line << "\n"  
+end
+out.close
 
