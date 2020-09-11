@@ -10,9 +10,9 @@
 ##
 ## http://jb.asm.org/content/196/12/2210.full
 
-## POCP.The conserved proteins between a pair of genomes were determined by aligning all the protein
+## POCP. The conserved proteins between a pair of genomes were determined by aligning all the protein
 # sequences of one genome (query genome) with all the protein sequences of another genome using the
-# BLASTP program (20). Proteins from the query genome were considered conserved when they had a BLAST
+# BLASTP program. Proteins from the query genome were considered conserved when they had a BLAST
 # match with an E value of less than 1e−5, a sequence identity of more than 40%, and an alignable region
 # of the query protein sequence of more than 50%. For a pair of genomes, each genome was used as the
 # query genome to perform the BLASTP search. The number of conserved proteins in each genome of strains
@@ -59,6 +59,7 @@ class Pocp
     end
 
     # blast
+    # run blast only once per genome pair
     puts "Run Blastp..."
     c1 = blast(species1_faa, species2_faa, species1_bn, out_dir, threads)
     c2 = blast(species2_faa, species1_faa, species2_bn, out_dir, threads)

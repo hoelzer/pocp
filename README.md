@@ -5,13 +5,18 @@ As input use one amino acid sequence FASTA file per genome such as provided by
 with Prokka first and subsequently organize all your FASTA (*.faa) in one folder
 (see example data folder in this repository). The script will then calculate all
 pairwise alignments between all FASTA files in the provided folder and use this
-information for POCP calculation following [Qin, Xie et al.
+information for POCP calculation following [Qin, Xie _et al_.
 2014](https://www.ncbi.nlm.nih.gov/pubmed/24706738).
 
-You need ``awk``, ``grep``, and ``blastp`` as installed dependencies (``awk``
-and ``grep`` should be already installed on any linux system). 
+You need ``ruby``, ``awk``, ``grep``, and ``blastp`` as installed dependencies (``ruby``, ``awk``
+and ``grep`` should be already installed on any linux system). The easiest way 
+to install `blastp` is via conda:
 
-If you have blastp installed and in your PATH, simply clone this repository and
+```
+conda create -n pocp -c bioconda blast && conda activate pocp 
+```
+
+If you have blastp installed and in your PATH, simply skip the above step and clone this repository and
 execute the following test comand:
 
 ````
