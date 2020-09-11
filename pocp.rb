@@ -96,6 +96,8 @@ threads = ARGV[2]
 
 strains = []
 
+pairwise_comparisons_done = []
+
 Dir.glob(fasta_dir+"/*.faa").each do |fasta1|
   species1_faa = fasta1
   species1_name = File.basename(fasta1, '.faa')
@@ -103,8 +105,16 @@ Dir.glob(fasta_dir+"/*.faa").each do |fasta1|
     species2_faa = fasta2
     species2_name = File.basename(fasta2, '.faa')
     out = "#{out_dir}/#{species1_name}-vs-#{species2_name}"
+    # check here if already an output exist and dont run blast twice for same two species
+    if pairwise_comparisons_done.include?("#{species1_name}-vs-#{species2_name}")
+      done = out 
+      out = "#{out_dir}/#{species2_name}-vs-#{species1_name}"
+      `cp -r #{done} #{out}`
+      next
+    end
     `mkdir -p #{out}`
     Pocp.new(species1_faa, species2_faa, out, threads)
+    pairwise_comparisons_done.push("#{species1_name}-vs-#{species2_name}")
     strains.push(species1_name) unless strains.include?(species1_name)
     strains.push(species2_name) unless strains.include?(species2_name)
   end
