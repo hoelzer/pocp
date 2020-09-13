@@ -106,9 +106,8 @@ Dir.glob(fasta_dir+"/*.faa").each do |fasta1|
     species2_name = File.basename(fasta2, '.faa')
     out = "#{out_dir}/#{species1_name}-vs-#{species2_name}"
     # check here if already an output exist and dont run blast twice for same two species
-    if pairwise_comparisons_done.include?("#{species1_name}-vs-#{species2_name}")
-      done = out 
-      out = "#{out_dir}/#{species2_name}-vs-#{species1_name}"
+    if pairwise_comparisons_done.include?("#{species2_name}-vs-#{species1_name}")
+      done = "#{out_dir}/#{species2_name}-vs-#{species1_name}" 
       `cp -r #{done} #{out}`
       next
     end
@@ -163,3 +162,4 @@ strains.each do |strain1|
 end
 out.close
 
+puts "\n--------------------------------------------\nPOCP calculations done. I performed #{pairwise_comparisons_done.size} pairwise comparisons for #{strains.size} input files.\n--------------------------------------------"
