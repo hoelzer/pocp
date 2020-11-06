@@ -93,15 +93,23 @@ end
 fasta_dir = ARGV[0]
 out_dir = ARGV[1]
 threads = ARGV[2]
+# Per default all pairwise comparisons of all FASTA files in the input folder are performed. 
+# Please define a single FASTA filename, if comparisons should be only performed against the protein sequences for this species.  
+fixed_genome = ARGV[3]
 
 strains = []
 
 pairwise_comparisons_done = []
 
+#if fixed_genome
+#  species1_faa = fasta_dir+"/#{fixed_genome}"
+#  species1_name = File.basename(fasta1, '.faa')
+#end
 Dir.glob(fasta_dir+"/*.faa").each do |fasta1|
-  species1_faa = fasta1
-  species1_name = File.basename(fasta1, '.faa')
-  Dir.glob(fasta_dir+"/*.faa").each do |fasta2|
+    species1_faa = fasta1
+    species1_name = File.basename(fasta1, '.faa')
+    next unless fixed_genome == species1_name+'.faa' || fixed_genome == nil
+    Dir.glob(fasta_dir+"/*.faa").each do |fasta2|
     species2_faa = fasta2
     species2_name = File.basename(fasta2, '.faa')
     out = "#{out_dir}/#{species1_name}-vs-#{species2_name}"
@@ -153,9 +161,11 @@ strains.each do |strain1|
     if tmp_count > 0 
 		  out_line += ","
     else      
-	    comp = "#{strain1}-vs-#{strain2}"
-		  pocp = `grep POCP #{out_dir}/#{comp}/pocp.txt | awk 'BEGIN{FS=" "};{print $5}'`.chomp.strip
-			out_line += ",#{pocp}"
+      comp = "#{strain1}-vs-#{strain2}"
+      if File.exists?("#{out_dir}/#{comp}/pocp.txt")
+		    pocp = `grep POCP #{out_dir}/#{comp}/pocp.txt | awk 'BEGIN{FS=" "};{print $5}'`.chomp.strip
+        out_line += ",#{pocp}"
+      end
     end    
   end
   out << out_line << "\n"  
