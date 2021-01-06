@@ -10,9 +10,9 @@
 ##
 ## http://jb.asm.org/content/196/12/2210.full
 
-## POCP.The conserved proteins between a pair of genomes were determined by aligning all the protein
+## POCP. The conserved proteins between a pair of genomes were determined by aligning all the protein
 # sequences of one genome (query genome) with all the protein sequences of another genome using the
-# BLASTP program (20). Proteins from the query genome were considered conserved when they had a BLAST
+# BLASTP program. Proteins from the query genome were considered conserved when they had a BLAST
 # match with an E value of less than 1e−5, a sequence identity of more than 40%, and an alignable region
 # of the query protein sequence of more than 50%. For a pair of genomes, each genome was used as the
 # query genome to perform the BLASTP search. The number of conserved proteins in each genome of strains
@@ -59,6 +59,7 @@ class Pocp
     end
 
     # blast
+    # run blast only once per genome pair
     puts "Run Blastp..."
     c1 = blast(species1_faa, species2_faa, species1_bn, out_dir, threads)
     c2 = blast(species2_faa, species1_faa, species2_bn, out_dir, threads)
@@ -92,18 +93,35 @@ end
 fasta_dir = ARGV[0]
 out_dir = ARGV[1]
 threads = ARGV[2]
+# Per default all pairwise comparisons of all FASTA files in the input folder are performed. 
+# Please define a single FASTA filename, if comparisons should be only performed against the protein sequences for this species.  
+fixed_genome = ARGV[3]
 
 strains = []
 
+pairwise_comparisons_done = []
+
+#if fixed_genome
+#  species1_faa = fasta_dir+"/#{fixed_genome}"
+#  species1_name = File.basename(fasta1, '.faa')
+#end
 Dir.glob(fasta_dir+"/*.faa").each do |fasta1|
-  species1_faa = fasta1
-  species1_name = File.basename(fasta1, '.faa')
-  Dir.glob(fasta_dir+"/*.faa").each do |fasta2|
+    species1_faa = fasta1
+    species1_name = File.basename(fasta1, '.faa')
+    next unless fixed_genome == species1_name+'.faa' || fixed_genome == nil
+    Dir.glob(fasta_dir+"/*.faa").each do |fasta2|
     species2_faa = fasta2
     species2_name = File.basename(fasta2, '.faa')
     out = "#{out_dir}/#{species1_name}-vs-#{species2_name}"
+    # check here if already an output exist and dont run blast twice for same two species
+    if pairwise_comparisons_done.include?("#{species2_name}-vs-#{species1_name}")
+      done = "#{out_dir}/#{species2_name}-vs-#{species1_name}" 
+      `cp -r #{done} #{out}`
+      next
+    end
     `mkdir -p #{out}`
     Pocp.new(species1_faa, species2_faa, out, threads)
+    pairwise_comparisons_done.push("#{species1_name}-vs-#{species2_name}")
     strains.push(species1_name) unless strains.include?(species1_name)
     strains.push(species2_name) unless strains.include?(species2_name)
   end
@@ -143,12 +161,15 @@ strains.each do |strain1|
     if tmp_count > 0 
 		  out_line += ","
     else      
-	    comp = "#{strain1}-vs-#{strain2}"
-		  pocp = `grep POCP #{out_dir}/#{comp}/pocp.txt | awk 'BEGIN{FS=" "};{print $5}'`.chomp.strip
-			out_line += ",#{pocp}"
+      comp = "#{strain1}-vs-#{strain2}"
+      if File.exists?("#{out_dir}/#{comp}/pocp.txt")
+		    pocp = `grep POCP #{out_dir}/#{comp}/pocp.txt | awk 'BEGIN{FS=" "};{print $5}'`.chomp.strip
+        out_line += ",#{pocp}"
+      end
     end    
   end
   out << out_line << "\n"  
 end
 out.close
 
+puts "\n--------------------------------------------\nPOCP calculations done. I performed #{pairwise_comparisons_done.size} pairwise comparisons for #{strains.size} input files.\n--------------------------------------------"
