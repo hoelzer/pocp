@@ -37,7 +37,7 @@ workflow {
     proteins_ch = prokka(genome_input_ch).proteins
     proteins_ch.view()
     allvsall_ch = proteins_ch.combine(proteins_ch)
-    blast(allvsall_ch)
+    //blast(allvsall_ch)
 }
 
 // --help
