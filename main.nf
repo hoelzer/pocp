@@ -45,7 +45,7 @@ if (params.proteins && params.list) { proteins_input_ch = Channel
 // load modules
 include {prokka} from './modules/prokka'
 include {blast} from './modules/blast'
-include {pocp} from './modules/pocp'
+include {pocp; pocp_matrix} from './modules/pocp'
 
 // main workflow
 workflow {
@@ -62,7 +62,9 @@ workflow {
 
     blast_hits_ch = blast(allvsall_ch).hits.groupTuple()
 
-    pocp(blast_hits_ch).view()
+    pocp_matrix(
+      pocp(blast_hits_ch).map {comparison, pocp_file, pocp_value -> [pocp_file]}.collect()
+    )
 }
 
 // --help
@@ -75,7 +77,7 @@ def helpMSG() {
     log.info """
     ____________________________________________________________________________________________
 
-    P.O.C.P - calculate percentage of conserved proteins
+    P.O.C.P - calculate percentage of conserved proteins.
 
     A prokaryotic genus can be defined as a group of species with all pairwise POCP values higher than 50%.    
     

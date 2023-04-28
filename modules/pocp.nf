@@ -23,3 +23,20 @@ process pocp {
     echo \$POCP > ${genome_names}.txt
     """
 }
+
+process pocp_matrix {
+    label 'ruby'
+    publishDir "${params.output}/pocp", mode: 'copy', pattern: "pocp-matrix.csv"
+
+    input:
+      path(pocp_files) 
+    
+    output:
+	    //tuple val(genome_names), path("${genome_names}.txt"), env(POCP), emit: pocp
+    
+    script:
+    """
+    pocp-matrix.rb 
+    """
+
+}
