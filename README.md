@@ -5,8 +5,6 @@
 
 [![Twitter Follow](https://img.shields.io/twitter/follow/martinhoelzer.svg?style=social)](https://twitter.com/martinhoelzer) 
 
-__Update 2023: Re-implementation as a [Nextflow pipeline](nextflow.io).__
-
 __Please note that I simply provide this code for POCP calculation and it is not polished in any way. Thus, the user experience might be not great, but the code does the job. Please feel free to report any [issues](https://github.com/hoelzer/pocp/issues)!__
 
 As input use one amino acid sequence FASTA file per genome such as provided by
