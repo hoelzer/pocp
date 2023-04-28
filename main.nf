@@ -14,7 +14,8 @@ println "Workdir location:"
 println "  $workflow.workDir\u001B[0m"
 println " "
 if (params.help) { exit 0, helpMSG() }
-if (params.genomes == '') {exit 1, "input missing, use [--genomes]"}
+if (params.genomes == '' && params.proteins == '') {exit 1, "input missing, use either [--genomes] or [--proteins]"}
+if (params.genomes != '' && params.proteins != '') {exit 1, "provide one input, use either [--genomes] or [--proteins]"}
 
 // genome fasta input & --list support
 if (params.genomes && params.list) { genome_input_ch = Channel
@@ -28,16 +29,40 @@ if (params.genomes && params.list) { genome_input_ch = Channel
     .map { file -> tuple(file.baseName, file) }
 }
 
+// proteins fasta input & --list support
+if (params.proteins && params.list) { proteins_input_ch = Channel
+  .fromPath( params.proteins, checkIfExists: true )
+  .splitCsv()
+  .map { row -> [row[0], file("${row[1]}", checkIfExists: true)] }
+  //.view() 
+  }
+  else if (params.proteins) { proteins_input_ch = Channel
+    .fromPath( params.proteins, checkIfExists: true)
+    .map { file -> tuple(file.baseName, file) }
+}
+
+
 // load modules
 include {prokka} from './modules/prokka'
 include {blast} from './modules/blast'
+include {pocp} from './modules/pocp'
 
 // main workflow
 workflow {
-    proteins_ch = prokka(genome_input_ch).proteins
-    proteins_ch.view()
-    allvsall_ch = proteins_ch.combine(proteins_ch)
-    //blast(allvsall_ch)
+    if (params.genomes) {
+      proteins_ch = prokka(genome_input_ch)
+    } else {
+      proteins_ch = proteins_input_ch
+    }
+
+    allvsall_ch = proteins_ch.combine(proteins_ch).branch { id1, faa1, id2, faa2 ->
+        controls: id1 != id2
+            return tuple( id1, faa1, id2, faa2 )
+    }
+
+    blast_hits_ch = blast(allvsall_ch).hits.groupTuple()
+
+    pocp(blast_hits_ch).view()
 }
 
 // --help
@@ -56,9 +81,13 @@ def helpMSG() {
     
     ${c_yellow}Usage example:${c_reset}
     nextflow run hoelzer/pocp -r 0.0.1 --genomes '*.fasta' 
+    or
+    nextflow run hoelzer/pocp -r 0.0.1 --proteins '*.faa' 
 
     ${c_yellow}Input:${c_reset}
-    ${c_green} --genomes ${c_reset}           '*.fasta'         -> one strain per file
+    ${c_green} --genomes ${c_reset}           '*.fasta'         -> one genome per file
+    or
+    ${c_green} --proteins ${c_reset}           '*.faa'          -> one protein multi-FASTA per file
     ${c_dim}  ..change above input to csv:${c_reset} ${c_green}--list ${c_reset}   
 
     ${c_yellow}Options:${c_reset}

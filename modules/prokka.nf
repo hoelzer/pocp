@@ -2,7 +2,7 @@
 
 process prokka {
   label 'prokka'
-  publishDir "${params.output}/prokka", mode: 'copy', pattern: "${name}" 
+  publishDir "${params.output}/prokka", mode: 'copy', pattern: "${name}/${name}.faa" 
 
   input: 
     tuple val(name), path(fasta)
