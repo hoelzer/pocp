@@ -26,13 +26,13 @@ process pocp {
 
 process pocp_matrix {
     label 'ruby'
-    publishDir "${params.output}/pocp", mode: 'copy', pattern: "pocp-matrix.csv"
+    publishDir "${params.output}", mode: 'copy', pattern: "pocp-matrix.tsv"
 
     input:
       path(pocp_files) 
     
     output:
-	    //tuple val(genome_names), path("${genome_names}.txt"), env(POCP), emit: pocp
+	    path('pocp-matrix.tsv')
     
     script:
     """

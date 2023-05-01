@@ -24,49 +24,40 @@
 
 ########################################################################
 
-#ruby $DIR/matrix.rb "/home/hoelzer/projects/fabien_rsha_pocp/calc/flamingo" "14-2711_R47,15-2067_O50,15-2067_O99,Cav_10DC88,Cga_08-1274-3,Cps_6BC,Cab_S26-3,Cca_GPIC,Cfe_Fe-C56,Cpe_E58,Cpn_TW-183,Ctr_D-UW-3-CX,Cmu_Nigg,Csu_SWA-2,Cib_10-1398-6"
-
-## produce a matrix/excel format from the POCP script output
-pocps = {}
-strains = []
+## produce a matrix/excel format from the POCP pairwise output files
+strains = {}
 
 Dir.glob("*-vs-*").each do |comp|
 	bn = File.basename(comp)
   g1 = bn.split('-vs-')[0]
   g2 = bn.split('-vs-')[1].sub('.txt','')
-
-  pocp = `cat #{comp}`.chomp.strip.to_f.round(4)
-
-  if pocps[g1]
-	  pocps[g1].push(g2,pocp)
-  else
-	  pocps[g1] = [g2,pocp]
-  end  
-  strains.push(g1) unless strains.include?(g1)
-  strains.push(g2) unless strains.include?(g2)
+  strains[g1] = [] unless strains.keys.include?(g1)
+  strains[g2] = [] unless strains.keys.include?(g2)
 end
-puts "read in POCP for #{strains.size} strains."
+puts "Collected #{strains.keys.size} strains."
 
-out = File.open("pocp-matrix.csv",'w')
-out << 'ID,' << strains.join(',') << "\n"
-
-line_count = 0
-strains.each do |strain1|
-  out_line = strain1
-  line_count += 1
-  tmp_count = line_count
-	strains.each do |strain2|
-    tmp_count = tmp_count - 1
-    if tmp_count > 0 
-		  out_line += ","
-    else      
+strains.keys.each do |strain1|
+  strains.keys.each do |strain2|
+    if strain1 == strain2
+      strains[strain1].push('100.0')
+    else
       comp = "#{strain1}-vs-#{strain2}.txt"
       if File.exist?(comp)
-		    pocp = `cat #{comp}`.chomp.strip.to_f.round(4)
-        out_line += ",#{pocp}"
+		    pocp = `cat #{comp}`.chomp.strip.to_f.round(4).to_s
+        strains[strain1].push(pocp)
+      else
+        comp = "#{strain2}-vs-#{strain1}.txt"
+		    pocp = `cat #{comp}`.chomp.strip.to_f.round(4).to_s
+        strains[strain1].push(pocp)
       end
-    end    
-  end
-  out << out_line << "\n"  
+    end
+  end  
+end
+#puts strains
+
+out = File.open("pocp-matrix.tsv",'w')
+out << "ID\t" << strains.keys.join("\t") << "\n"
+strains.each do |strain_id, pocp_values|
+  out << "#{strain_id}\t" << pocp_values.join("\t") << "\n"
 end
 out.close
