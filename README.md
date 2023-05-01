@@ -1,62 +1,51 @@
 # Calculation of the Percentage Of Conserved Proteins
 
+![](https://img.shields.io/badge/nextflow-20.10.0-brightgreen)
 ![](https://img.shields.io/badge/uses-ruby-red)
+![](https://img.shields.io/badge/can_use-conda-yellow.svg)
+![](https://img.shields.io/badge/can_use-docker-blue.svg)
+![](https://img.shields.io/badge/can_use-singularity-orange.svg)
 ![](https://img.shields.io/badge/licence-GLP3-lightgrey.svg)
 
 [![Twitter Follow](https://img.shields.io/twitter/follow/martinhoelzer.svg?style=social)](https://twitter.com/martinhoelzer) 
 
-__Update 2023: Re-implementation as a [Nextflow pipeline](nextflow.io).__
-
-__Please note that I simply provide this code for POCP calculation and it is not polished in any way. Thus, the user experience might be not great, but the code does the job. Please feel free to report any [issues](https://github.com/hoelzer/pocp/issues)!__
+__Update 2023: Re-implementation as a [Nextflow pipeline](nextflow.io). Please feel free to report any [issues](https://github.com/hoelzer/pocp/issues)!__
 
 As input use one amino acid sequence FASTA file per genome such as provided by
-[Prokka](https://github.com/tseemann/prokka). Simply annotate all your genomes
-with Prokka first and subsequently organize all your FASTA (`*.faa`) in one folder
-(see example data folder in this repository). The script will then calculate all
-pairwise alignments between all FASTA files in the provided folder and use this
+[Prokka](https://github.com/tseemann/prokka) or genome FASTA files which will be then annotated via [Prokka](https://github.com/tseemann/prokka). 
+The pipeline will then calculate all pairwise alignments between all protein sequences and use this
 information for POCP calculation following [Qin, Xie _et al_.
-2014](https://www.ncbi.nlm.nih.gov/pubmed/24706738). You can also compare all your `*.faa`
-input files only against one other `*.faa` file to reduce runtime (see below).
+2014](https://www.ncbi.nlm.nih.gov/pubmed/24706738). 
 
-You need `ruby`, `awk`, `grep`, and `blastp` as installed dependencies (`ruby`, `awk`
-and `grep` should be already installed on any Linux system). The easiest way 
-to install `blastp` is via [conda](https://docs.conda.io/en/latest/miniconda.html):
+You only need `nextflow` and `conda` or `mamba` or `docker` or `singularity` to run the pipeline. I recommend using `docker`. Then install and run the pipeline:
 
 ```bash
-conda create -n pocp -c bioconda blast && conda activate pocp 
+# get the pipeline code
+nextflow pull hoelzer/pocp 
+
+# check availble release versions and development branches
+nextflow info hoelzer/pocp 
+
+# get the help page and define a release version
+nextflow run hoelzer/pocp -r 2.0.0 --help
+
+# example with genome files as input, performing a local execution and using Docker
+nextflow run hoelzer/pocp -r 2.0.0 --genomes 'example/*.fasta' -profile local,docker
+
+# example with protein FASTA files as input (e.g. from Prokka pre-calculated), performing a SLURM execution and using conda
+nextflow run hoelzer/pocp -r 2.0.0 --proteins 'example/*.faa' -profile slurm,conda
 ```
 
-If you have blastp installed and in your PATH, simply skip the above step and clone this repository and
-execute the following test comand:
-
-```bash
-git clone https://github.com/hoelzer/pocp.git
-cd pocp
-chmod +x pocp.rb
-
-./pocp.rb example/ example/results/ 2
-```
-
-_Important_: The first given parameter must be the input dir holding the
-``*.faa`` FASTA files, the second parameter must be the output path and the
-third parameter must be the number of threads used for `blastp` searches.
-
-The final output (`results.csv`) should look like this:
+The final output (`pocp-matrix.tsv`) should look like this (here, the resulting `pocp-matrix.tsv` was imported into LibreOffice and formated):
 
 ![Example output](example_output.png)
 
-If needed, the following parameters used for filtering the blast results can be
-adjusted directly in the ruby script:
+If needed, the following parameters used for filtering the `blast` results can be
+adjusted:
 
 ```bash
-EVALUE = 1e-5
-SEQ_IDENTITY = 0.4
-ALN_LENGTH = 0.5
+--evalue 1e-5
+--seqidentity 0.4
+--alnlength 0.5
 ```
 
-Per default all pairwise comparisons of all `.faa` FASTA files located in the input folder are performed. 
-Please define a single FASTA filename (not path, only the filename), if comparisons should be only performed against the protein sequences in this file:
-
-```bash
-./pocp.rb example/ example/results/ 2 Cav_10DC88.faa
-```
