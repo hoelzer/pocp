@@ -1,7 +1,0 @@
-name: blast
-channels:
-  - bioconda
-dependencies:
-  - diamond=2.1
-  - python=3.8
-  
