@@ -44,7 +44,7 @@ if (params.proteins && params.list) { proteins_input_ch = Channel
 
 // load modules
 include {prokka} from './modules/prokka'
-include {blast} from './modules/blast'
+include {diamond} from './modules/diamond'
 include {pocp; pocp_matrix} from './modules/pocp'
 
 // main workflow
@@ -60,10 +60,10 @@ workflow {
             return tuple( id1, faa1, id2, faa2 )
     }
 
-    blast_hits_ch = blast(allvsall_ch).hits.groupTuple()
+    diamond_hits_ch = diamond(allvsall_ch).hits.groupTuple()
 
     pocp_matrix(
-      pocp(blast_hits_ch).map {comparison, pocp_file, pocp_value -> [pocp_file]}.collect()
+      pocp(diamond_hits_ch).map {comparison, pocp_file, pocp_value -> [pocp_file]}.collect()
     )
 }
 
@@ -94,9 +94,9 @@ def helpMSG() {
 
     ${c_yellow}Options:${c_reset}
     --gcode             genetic code for Prokka annotation [default: $params.gcode]
-    --evalue            Evalue for blastp [default: $params.evalue]
-    --seqidentity       Sequence identity for blastp [default: $params.seqidentity]
-    --alnlength         Alignment length for blastp [default: $params.alnlength]
+    --evalue            Evalue for diamond protein search [default: $params.evalue]
+    --seqidentity       Sequence identity for diamond alignments [default: $params.seqidentity]
+    --alnlength         Alignment length for diamond hits [default: $params.alnlength]
     --cores             max cores per process for local use [default: $params.cores]
     --max_cores         max cores (in total) for local use [default: $params.max_cores]
     --memory            max memory for local use [default: $params.memory]

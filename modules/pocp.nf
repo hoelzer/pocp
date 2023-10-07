@@ -4,7 +4,7 @@ Calculate POCP value:
   puts "\n\nC1:\t#{c1}\nC2:\t#{c2}\n\nT1:\t#{t1}\nT2:\t#{t2}\n\nPOCP = [(C1+C2)/(T1+T2)]*100% = #{pocp}"
 */
 process pocp {
-    label 'blast'
+    label 'diamond'
     publishDir "${params.output}/pocp", mode: 'copy', pattern: "${genome_names}.txt"
 
     input:
