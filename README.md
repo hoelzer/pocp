@@ -9,11 +9,11 @@
 
 [![Twitter Follow](https://img.shields.io/twitter/follow/martinhoelzer.svg?style=social)](https://twitter.com/martinhoelzer) 
 
-__Update 2023/05: Re-implementation as a [Nextflow pipeline](nextflow.io). Please feel free to report any [issues](https://github.com/hoelzer/pocp/issues)!__
+__Update 2023/12: One-vs-All comparisons are now possible in genome and protein input mode. Check `--help` message.__
 
 __Update 2023/10: Now using [Diamond](https://www.nature.com/articles/s41592-021-01101-x) instead of Blast for protein alignments. Thx [@michoug](https://github.com/michoug) for the Pull Request.__
 
-__Update 2023/12: One-vs-All comparisons are now possible in genome and protein input mode. Check `--help` message`.__
+__Update 2023/05: Re-implementation as a [Nextflow pipeline](nextflow.io). Please feel free to report any [issues](https://github.com/hoelzer/pocp/issues)!__
 
 As input use one amino acid sequence FASTA file per genome such as provided by
 [Prokka](https://github.com/tseemann/prokka) or genome FASTA files which will be then annotated via [Prokka](https://github.com/tseemann/prokka). 
@@ -55,4 +55,4 @@ adjusted:
 --alnlength 0.5
 ```
 
-Please note that per default an "all-vs-all" comparison is performed based on the provided FASTA files. However, you can also switch to an "one-vs-all" comparison by additionally providing a single genome FASTA via `--genome` next to the `--genomes` directory **or** a single protein multi-FASTA via `--protein` next to the `--proteins` directory. In both cases, only "one-vs-all" comparisons will be performed.   
+Please note that per default an "all-vs-all" comparison is performed based on the provided FASTA files. However, you can also switch to an "one-vs-all" comparison by additionally providing a single genome FASTA via `--genome` next to the `--genomes` input **or** a single protein multi-FASTA via `--protein` next to the `--proteins` input. In both cases, only "one-vs-all" comparisons will be performed. It is also possible to combine `--genomes` with a target `--protein` FASTA for "one-vs-all" and vice versa. 
