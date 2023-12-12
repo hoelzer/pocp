@@ -33,13 +33,13 @@ nextflow info hoelzer/pocp
 nextflow run hoelzer/pocp -r 2.2.0 --help
 
 # example with genome files as input, all-vs-all comparison, performing a local execution and using Docker
-nextflow run hoelzer/pocp -r 2.2.0 --genomes 'example/*.fasta' -profile local,docker
+nextflow run hoelzer/pocp -r 2.2.0 --genomes $HOME'/.nextflow/assets/hoelzer/pocp/example/*.fasta' -profile local,docker
 
 # example with protein FASTA files as input (e.g. from Prokka pre-calculated), all-vs-all comparison, performing a SLURM execution and using conda
-nextflow run hoelzer/pocp -r 2.2.0 --proteins 'example/*.faa' -profile slurm,conda
+nextflow run hoelzer/pocp -r 2.2.0 --proteins $HOME'/.nextflow/assets/hoelzer/pocp/example/*.faa' -profile slurm,conda
 
 # example with genome files as input, additional genome file to activate one-vs-all comparison, performing a local execution and using Docker
-nextflow run hoelzer/pocp -r 2.2.0 --genomes 'example/*.fasta' --genome example/Cav_10DC88.fasta -profile local,docker
+nextflow run hoelzer/pocp -r 2.2.0 --genomes $HOME'/.nextflow/assets/hoelzer/pocp/example/*.fasta' --genome $HOME/.nextflow/assets/hoelzer/pocp/example/Cav_10DC88.fasta -profile local,docker
 ```
 
 The final output (`pocp-matrix.tsv`) should look like this (here, the resulting TSV was imported into Numbers on MacOS):
