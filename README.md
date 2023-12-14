@@ -56,3 +56,9 @@ adjusted:
 ```
 
 Please note that per default an "all-vs-all" comparison is performed based on the provided FASTA files. However, you can also switch to an "one-vs-all" comparison by additionally providing a single genome FASTA via `--genome` next to the `--genomes` input **or** a single protein multi-FASTA via `--protein` next to the `--proteins` input. In both cases, only "one-vs-all" comparisons will be performed. It is also possible to combine `--genomes` with a target `--protein` FASTA for "one-vs-all" and vice versa. 
+
+If you use the POCP Nextflow pipeline, please cite the original POCP study that introduced the metric and the POCP-nf pipeline:
+
+**[Qin, Qi-Long, _et al_. "A proposed genus boundary for the prokaryotes based on genomic insights." Journal of bacteriology 196.12 (2014): 2210-2215.](https://pubmed.ncbi.nlm.nih.gov/24706738/)**
+
+**[Martin Hölzer. "POCP: An automatic Nextflow pipeline for calculating the percentage of conserved proteins in bacterial taxonomy". SOME JOURNAL. Hopefully in 2024.]()**
