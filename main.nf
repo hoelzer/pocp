@@ -16,8 +16,9 @@ println " "
 if (params.help) { exit 0, helpMSG() }
 if (params.genomes == '' && params.proteins == '') {exit 1, "input missing, use either [--genomes] or [--proteins]"}
 if (params.genomes != '' && params.proteins != '') {exit 1, "provide one input, use either [--genomes] or [--proteins]"}
+if (params.genome && params.protein) {exit 1, "provide only one input, use either [--genome] or [--protein]"}
 
-// genome fasta input & --list support
+// genomes fasta input & --list support
 if (params.genomes && params.list) { genome_input_ch = Channel
   .fromPath( params.genomes, checkIfExists: true )
   .splitCsv()
@@ -41,9 +42,20 @@ if (params.proteins && params.list) { proteins_input_ch = Channel
     .map { file -> tuple(file.baseName, file) }
 }
 
+// optional input for one-vs-all comparisons instead of all-vs-all
+// genome fasta input
+if (params.genome) { genome_single_input_ch = Channel
+    .fromPath( params.genome, checkIfExists: true)
+    .map { file -> tuple(file.baseName, file) }
+}
+// protein fasta input
+if (params.protein) { protein_single_input_ch = Channel
+    .fromPath( params.protein, checkIfExists: true)
+    .map { file -> tuple(file.baseName, file) }
+}
 
 // load modules
-include {prokka} from './modules/prokka'
+include {prokka as prokka; prokka as prokka_single} from './modules/prokka'
 include {diamond} from './modules/diamond'
 include {pocp; pocp_matrix} from './modules/pocp'
 
@@ -55,12 +67,31 @@ workflow {
       proteins_ch = proteins_input_ch
     }
 
-    allvsall_ch = proteins_ch.combine(proteins_ch).branch { id1, faa1, id2, faa2 ->
-        controls: id1 != id2
-            return tuple( id1, faa1, id2, faa2 )
+    // switch to one-vs-all
+    if (params.genome) { protein_ch = prokka_single(genome_single_input_ch) }
+    if (params.protein) { protein_ch = protein_single_input_ch }
+
+    if (params.genome || params.protein) {
+      // one-vs-all
+      one_vs_all_ch_part1 = proteins_ch.combine(protein_ch).branch { id1, faa1, id2, faa2 ->
+          controls: id1 != id2
+              return tuple( id1, faa1, id2, faa2 )
+      }
+      one_vs_all_ch_part2 = proteins_ch.combine(protein_ch).branch { id1, faa1, id2, faa2 ->
+          controls: id1 != id2
+              return tuple( id2, faa2, id1, faa1 )
+      }
+      comparisons_ch = one_vs_all_ch_part1.concat(one_vs_all_ch_part2)
+    } else {
+      // all-vs-all
+      all_vs_all_ch = proteins_ch.combine(proteins_ch).branch { id1, faa1, id2, faa2 ->
+          controls: id1 != id2
+              return tuple( id1, faa1, id2, faa2 )
+      }
+      comparisons_ch = all_vs_all_ch
     }
 
-    diamond_hits_ch = diamond(allvsall_ch).hits.groupTuple()
+    diamond_hits_ch = diamond(comparisons_ch).hits.groupTuple()
 
     pocp_matrix(
       pocp(diamond_hits_ch).map {comparison, pocp_file, pocp_value -> [pocp_file]}.collect()
@@ -82,15 +113,21 @@ def helpMSG() {
     A prokaryotic genus can be defined as a group of species with all pairwise POCP values higher than 50%.    
     
     ${c_yellow}Usage example:${c_reset}
-    nextflow run hoelzer/pocp -r 0.0.1 --genomes '*.fasta' 
+    nextflow run hoelzer/pocp -r 2.2.0 --genomes '*.fasta' 
     or
-    nextflow run hoelzer/pocp -r 0.0.1 --proteins '*.faa' 
+    nextflow run hoelzer/pocp -r 2.2.0 --proteins '*.faa' 
 
-    ${c_yellow}Input:${c_reset}
+    ${c_yellow}Input${c_reset}
+    ${c_yellow}All-vs-all comparisons (default):${c_reset}
     ${c_green} --genomes ${c_reset}           '*.fasta'         -> one genome per file
     or
     ${c_green} --proteins ${c_reset}           '*.faa'          -> one protein multi-FASTA per file
     ${c_dim}  ..change above input to csv:${c_reset} ${c_green}--list ${c_reset}   
+
+    ${c_yellow}Perform one-vs-all comparison against the additionally defined genome or protein FASTA (optional):${c_reset}
+     --genome            genome.fasta         -> one genome FASTA
+    or
+     --protein           proteins.faa         -> one protein multi-FASTA
 
     ${c_yellow}Options:${c_reset}
     --gcode             genetic code for Prokka annotation [default: $params.gcode]
