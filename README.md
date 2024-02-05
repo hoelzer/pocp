@@ -55,7 +55,9 @@ adjusted:
 --alnlength 0.5
 ```
 
-Please note that per default an "all-vs-all" comparison is performed based on the provided FASTA files. However, you can also switch to an "one-vs-all" comparison by additionally providing a single genome FASTA via `--genome` next to the `--genomes` input **or** a single protein multi-FASTA via `--protein` next to the `--proteins` input. In both cases, only "one-vs-all" comparisons will be performed. It is also possible to combine `--genomes` with a target `--protein` FASTA for "one-vs-all" and vice versa. 
+**Attention**: Although the user can customize these parameters, I recommend sticking to the original parameters defined [Qin, Xie _et al_. 2014](https://www.ncbi.nlm.nih.gov/pubmed/24706738) and otherwise clearly indicating any changed parameter options along with the version of POCP-nf used when sharing POCP results!
+
+Please also note that per default an "all-vs-all" comparison is performed based on the provided FASTA files. However, you can also switch to an "one-vs-all" comparison by additionally providing a single genome FASTA via `--genome` next to the `--genomes` input **or** a single protein multi-FASTA via `--protein` next to the `--proteins` input. In both cases, only "one-vs-all" comparisons will be performed. It is also possible to combine `--genomes` with a target `--protein` FASTA for "one-vs-all" and vice versa. 
 
 If you use the POCP Nextflow pipeline, please cite the original POCP study that introduced the metric and the POCP-nf pipeline:
 
