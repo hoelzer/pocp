@@ -56,6 +56,7 @@ if (params.protein) { protein_single_input_ch = Channel
 
 // load modules
 include {prokka as prokka; prokka as prokka_single} from './modules/prokka'
+include {blast} from './modules/blast'
 include {diamond} from './modules/diamond'
 include {pocp; pocp_matrix} from './modules/pocp'
 
@@ -91,10 +92,15 @@ workflow {
       comparisons_ch = all_vs_all_ch
     }
 
-    diamond_hits_ch = diamond(comparisons_ch).hits.groupTuple()
+    // use either BLASTP or DIAMOND
+    if (params.diamond) {
+      hits_ch = diamond(comparisons_ch).hits.groupTuple()
+    } else {
+      hits_ch = blast(comparisons_ch).hits.groupTuple()
+    }
 
     pocp_matrix(
-      pocp(diamond_hits_ch).map {comparison, pocp_file, pocp_value -> [pocp_file]}.collect()
+      pocp(hits_ch).map {comparison, pocp_file, pocp_value -> [pocp_file]}.collect()
     )
 }
 
@@ -130,14 +136,15 @@ def helpMSG() {
      --protein           proteins.faa         -> one protein multi-FASTA
 
     ${c_yellow}Options:${c_reset}
-    --gcode             genetic code for Prokka annotation [default: $params.gcode]
-    --evalue            Evalue for diamond protein search [default: $params.evalue]
-    --seqidentity       Sequence identity for diamond alignments [default: $params.seqidentity]
-    --alnlength         Alignment length for diamond hits [default: $params.alnlength]
-    --cores             max cores per process for local use [default: $params.cores]
-    --max_cores         max cores (in total) for local use [default: $params.max_cores]
-    --memory            max memory for local use [default: $params.memory]
-    --output            name of the result folder [default: $params.output]
+    --gcode             Genetic code for Prokka annotation [default: $params.gcode]
+    --evalue            Evalue for BLASTP protein search [default: $params.evalue]
+    --seqidentity       Sequence identity for BLASTP alignments [default: $params.seqidentity]
+    --alnlength         Alignment length for BLASTP hits [default: $params.alnlength]
+    --diamond           Use DIAMOND instead of BLASTP for protein alignment (faster, similar sensitivity) [default: $params.diamond]
+    --cores             Max cores per process for local use [default: $params.cores]
+    --max_cores         Max cores (in total) for local use [default: $params.max_cores]
+    --memory            Max memory for local use [default: $params.memory]
+    --output            Name of the result folder [default: $params.output]
 
     ${c_dim}Nextflow options:
     -with-report rep.html    cpu / ram usage (may cause errors)
