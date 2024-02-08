@@ -46,7 +46,7 @@ The final output (`pocp-matrix.tsv`) should look like this (here, the resulting 
 
 ![Example output](example_output.png)
 
-The pipeline identifies orthologous proteins between species using DIAMOND in blastp mode. Please note that the original POCP publication used BLASTP for calculating the alignments. However, DIAMOND is not only faster, which is an advantage when calculating POCP values for larger input data sets, but also achieves the sensitivity of BLASTP [Buchfink (2021)](https://www.nature.com/articles/s41592-021-01101-x), especially when using the `--ultra-sensitive` mode, which is activated by default in the pipeline. Another study comparing different alignment programs found that DIAMOND offered the best compromise between speed, sensitivity and quality when a sensitivity option other than the default setting was selected [Hernández-Salmerón and Moreno-Hagelsieb (2020)](https://bmcgenomics.biomedcentral.com/articles/10.1186/s12864-020-07132-6). Therefore I decided to use DIAMOND as a more modern solution for the alignment calculation in POCP-nf.
+The pipeline identifies orthologous proteins between species using DIAMOND in blastp mode. Please note that the original POCP publication used BLASTP for calculating the alignments. However, DIAMOND is not only faster, which is an advantage when calculating POCP values for larger input data sets, but also achieves the sensitivity of BLASTP ([Buchfink (2021)](https://www.nature.com/articles/s41592-021-01101-x)), especially when using the `--ultra-sensitive` mode, which is activated by default in the pipeline. Another study comparing different alignment programs found that DIAMOND offered the best compromise between speed, sensitivity and quality when a sensitivity option other than the default setting was selected ([Hernández-Salmerón and Moreno-Hagelsieb (2020)](https://bmcgenomics.biomedcentral.com/articles/10.1186/s12864-020-07132-6)). Therefore I decided to use DIAMOND as a more modern solution for the alignment calculation in POCP-nf.
 
 If needed, the following parameters used for filtering the DIAMOND results (blastp mode) can be
 adjusted:
@@ -57,7 +57,7 @@ adjusted:
 --alnlength 0.5
 ```
 
-**Attention**: Although the user can customize these parameters, I recommend sticking to the original parameters defined [Qin, Xie _et al_. 2014](https://www.ncbi.nlm.nih.gov/pubmed/24706738) and otherwise clearly indicating any changed parameter options along with the version of POCP-nf used when sharing POCP results!
+**Attention**: Although the user can customize these parameters, I recommend sticking to the original parameters defined by [Qin, Xie _et al_. 2014](https://www.ncbi.nlm.nih.gov/pubmed/24706738) and otherwise clearly indicating any changed parameter options along with the version of POCP-nf used when sharing POCP results!
 
 Please also note that per default an "all-vs-all" comparison is performed based on the provided FASTA files. However, you can also switch to an "one-vs-all" comparison by additionally providing a single genome FASTA via `--genome` next to the `--genomes` input **or** a single protein multi-FASTA via `--protein` next to the `--proteins` input. In both cases, only "one-vs-all" comparisons will be performed. It is also possible to combine `--genomes` with a target `--protein` FASTA for "one-vs-all" and vice versa. 
 
