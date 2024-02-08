@@ -137,10 +137,10 @@ def helpMSG() {
 
     ${c_yellow}Options:${c_reset}
     --gcode             Genetic code for Prokka annotation [default: $params.gcode]
-    --evalue            Evalue for BLASTP protein search [default: $params.evalue]
-    --seqidentity       Sequence identity for BLASTP alignments [default: $params.seqidentity]
-    --alnlength         Alignment length for BLASTP hits [default: $params.alnlength]
-    --diamond           Use DIAMOND instead of BLASTP for protein alignment (faster, similar sensitivity) [default: $params.diamond]
+    --evalue            Evalue for DIAMOND protein search [default: $params.evalue]
+    --seqidentity       Sequence identity for DIAMOD alignments [default: $params.seqidentity]
+    --alnlength         Alignment length for DIAMOND hits [default: $params.alnlength]
+    --blastp            Use BLASTP instead of DIAMOND for protein alignment (slower, as in the original 2014 publication) [default: $params.blastp]
     --cores             Max cores per process for local use [default: $params.cores]
     --max_cores         Max cores (in total) for local use [default: $params.max_cores]
     --memory            Max memory for local use [default: $params.memory]

@@ -11,7 +11,7 @@
 
 __Update 2023/12: One-vs-All comparisons are now possible in genome and protein input mode. Check `--help` message.__
 
-__Update 2023/10: Now using [Diamond](https://www.nature.com/articles/s41592-021-01101-x) instead of Blast for protein alignments. Thx [@michoug](https://github.com/michoug) for the Pull Request.__
+__Update 2023/10: Now using [Diamond](https://www.nature.com/articles/s41592-021-01101-x) instead of Blastp for protein alignments. Thx [@michoug](https://github.com/michoug) for the Pull Request.__
 
 __Update 2023/05: Re-implementation as a [Nextflow pipeline](nextflow.io). Please feel free to report any [issues](https://github.com/hoelzer/pocp/issues)!__
 
@@ -46,7 +46,9 @@ The final output (`pocp-matrix.tsv`) should look like this (here, the resulting 
 
 ![Example output](example_output.png)
 
-If needed, the following parameters used for filtering the `diamond` results (blastp mode) can be
+The pipeline identifies orthologous proteins between species using DIAMOND in blastp mode. Please note that the original POCP publication used BLASTP for calculating the alignments. However, DIAMOND is not only faster, which is an advantage when calculating POCP values for larger input data sets, but also achieves the sensitivity of BLASTP [Buchfink (2021)](https://www.nature.com/articles/s41592-021-01101-x), especially when using the `--ultra-sensitive` mode, which is activated by default in the pipeline. Another study comparing different alignment programs found that DIAMOND offered the best compromise between speed, sensitivity and quality when a sensitivity option other than the default setting was selected [Hernández-Salmerón and Moreno-Hagelsieb (2020)](https://bmcgenomics.biomedcentral.com/articles/10.1186/s12864-020-07132-6). Therefore I decided to use DIAMOND as a more modern solution for the alignment calculation in POCP-nf.
+
+If needed, the following parameters used for filtering the DIAMOND results (blastp mode) can be
 adjusted:
 
 ```bash
