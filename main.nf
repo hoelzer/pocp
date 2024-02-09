@@ -92,11 +92,11 @@ workflow {
       comparisons_ch = all_vs_all_ch
     }
 
-    // use either BLASTP or DIAMOND
-    if (params.diamond) {
-      hits_ch = diamond(comparisons_ch).hits.groupTuple()
-    } else {
+    // use either BLASTP or DIAMOND (default)
+    if (params.blastp) {
       hits_ch = blast(comparisons_ch).hits.groupTuple()
+    } else {
+      hits_ch = diamond(comparisons_ch).hits.groupTuple()
     }
 
     pocp_matrix(

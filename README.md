@@ -110,15 +110,13 @@ The pipeline identifies orthologous proteins between species using DIAMOND in bl
 
 ## Parameter adjustments (danger zone)
 
-If needed, the following parameters used for filtering the DIAMOND results (blastp mode) can be adjusted:
+**Attention**: Although you can customize core parameters in the `nextflow` pipeline, I recommend sticking to the original parameters defined by [Qin, Xie _et al_. 2014](https://www.ncbi.nlm.nih.gov/pubmed/24706738) and otherwise clearly indicating any changed parameter options along with the version of POCP-nf used when sharing POCP results! The default parameters defined in the configuration of the pipeline are:
 
 ```bash
 --evalue 1e-5
 --seqidentity 0.4
 --alnlength 0.5
 ```
-
-**Attention**: Although the user can customize these parameters, I recommend sticking to the original parameters defined by [Qin, Xie _et al_. 2014](https://www.ncbi.nlm.nih.gov/pubmed/24706738) and otherwise clearly indicating any changed parameter options along with the version of POCP-nf used when sharing POCP results!
 
 <a name="allvsall"></a>
 
