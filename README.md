@@ -24,7 +24,7 @@
 
 ## Objective
 
-Sequence technology advancements have led to an exponential increase in bacterial genomes, necessitating robust taxonomic classification methods. The **P**ercentage **O**f **C**onserved **P**roteins (POCP), proposed initially by [Qin, Xie _et al_. 2014](https://www.ncbi.nlm.nih.gov/pubmed/24706738), is a valuable metric for assessing prokaryote genus boundaries. Here, I introduce a computational pipeline for automated POCP calculation, aiming to enhance reproducibility and ease of use in taxonomic studies.
+Sequence technology advancements have led to an exponential increase in bacterial genomes, necessitating robust taxonomic classification methods. The **P**ercentage **O**f **C**onserved **P**roteins (POCP), proposed initially by [Qin, Xie _et al_. 2014](https://www.ncbi.nlm.nih.gov/pubmed/24706738), is a valuable metric for assessing prokaryote genus boundaries. A prokaryotic genus can be defined as a group of species with all pairwise POCP values higher than 50%. Here, I introduce a computational pipeline for automated POCP calculation, aiming to enhance reproducibility and ease of use in taxonomic studies.
 
 <a name="how"></a>
 
@@ -104,7 +104,7 @@ nextflow run hoelzer/pocp -r 2.3.0 --genomes 'input/*.fasta' -profile local,dock
 
 ## A note on alignment calculation (DIAMOND vs. BLASTP)
 
-The pipeline identifies orthologous proteins between species using DIAMOND in blastp mode. Please note that the original POCP publication used BLASTP for calculating the alignments. However, DIAMOND is not only faster, which is an advantage when calculating POCP values for larger input data sets, but also achieves the sensitivity of BLASTP ([Buchfink (2021)](https://www.nature.com/articles/s41592-021-01101-x)), especially when using the `--ultra-sensitive` mode, which is activated by default in the pipeline. Another study comparing different alignment programs found that DIAMOND offered the best compromise between speed, sensitivity and quality when a sensitivity option other than the default setting was selected ([Hernández-Salmerón and Moreno-Hagelsieb (2020)](https://bmcgenomics.biomedcentral.com/articles/10.1186/s12864-020-07132-6)). Therefore I decided to use DIAMOND as a more modern solution for the alignment calculation in POCP-nf.
+The pipeline identifies orthologous proteins between species using DIAMOND in blastp mode. Please note that the original POCP publication used BLASTP for calculating the alignments. However, DIAMOND is not only faster, which is an advantage when calculating POCP values for larger input data sets, but also achieves the sensitivity of BLASTP ([Buchfink (2021)](https://www.nature.com/articles/s41592-021-01101-x)), especially when using the `--ultra-sensitive` mode, which is activated by default in the pipeline. Another study comparing different alignment programs found that DIAMOND offered the best compromise between speed, sensitivity and quality when a sensitivity option other than the default setting was selected ([Hernández-Salmerón and Moreno-Hagelsieb (2020)](https://bmcgenomics.biomedcentral.com/articles/10.1186/s12864-020-07132-6)). Therefore I decided to use DIAMOND as a more modern solution for the alignment calculation in POCP-nf. Thx [@michoug](https://github.com/michoug) for the idea and the Pull Request.
 
 <a name="parameter"></a>
 

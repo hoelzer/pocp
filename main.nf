@@ -110,6 +110,7 @@ def helpMSG() {
     c_reset = "\033[0m";
     c_yellow = "\033[0;33m";
     c_blue = "\033[0;34m";
+    c_red = "\033[0;31m";
     c_dim = "\033[2m";
     log.info """
     ____________________________________________________________________________________________
@@ -119,9 +120,14 @@ def helpMSG() {
     A prokaryotic genus can be defined as a group of species with all pairwise POCP values higher than 50%.    
     
     ${c_yellow}Usage example:${c_reset}
-    nextflow run hoelzer/pocp -r 2.2.0 --genomes '*.fasta' 
+    nextflow run hoelzer/pocp -r 2.3.0 --genomes '*.fasta' 
     or
-    nextflow run hoelzer/pocp -r 2.2.0 --proteins '*.faa' 
+    nextflow run hoelzer/pocp -r 2.3.0 --proteins '*.faa' 
+
+    Use the following commands to check for latest pipeline versions:
+    
+    nextflow pull hoelzer/pocp
+    nextflow info hoelzer/pocp
 
     ${c_yellow}Input${c_reset}
     ${c_yellow}All-vs-all comparisons (default):${c_reset}
@@ -135,21 +141,27 @@ def helpMSG() {
     or
      --protein           proteins.faa         -> one protein multi-FASTA
 
-    ${c_yellow}Options:${c_reset}
+    ${c_yellow}General Options:${c_reset}
     --gcode             Genetic code for Prokka annotation [default: $params.gcode]
-    --evalue            Evalue for DIAMOND protein search [default: $params.evalue]
-    --seqidentity       Sequence identity for DIAMOD alignments [default: $params.seqidentity]
-    --alnlength         Alignment length for DIAMOND hits [default: $params.alnlength]
-    --blastp            Use BLASTP instead of DIAMOND for protein alignment (slower, as in the original 2014 publication) [default: $params.blastp]
     --cores             Max cores per process for local use [default: $params.cores]
     --max_cores         Max cores (in total) for local use [default: $params.max_cores]
     --memory            Max memory for local use [default: $params.memory]
     --output            Name of the result folder [default: $params.output]
 
+    ${c_yellow}Special Options${c_reset} ${c_red}(Danger Zone!)${c_yellow}:${c_reset}
+    ATTENTION: changing these parameters will lead to different POCP values. 
+    If you have good reasons to do that, you must report the changed parameters together with the used pipeline version.
+    
+    --evalue            Evalue for DIAMOND protein search [default: $params.evalue]
+    --seqidentity       Sequence identity for DIAMOD alignments [default: $params.seqidentity]
+    --alnlength         Alignment length for DIAMOND hits [default: $params.alnlength]
+    --blastp            Use BLASTP instead of DIAMOND for protein alignment (slower, as in the original 2014 publication) [default: $params.blastp]
+
     ${c_dim}Nextflow options:
     -with-report rep.html    cpu / ram usage (may cause errors)
     -with-dag chart.html     generates a flowchart for the process tree
     -with-timeline time.html timeline (may cause errors)
+    -resume                  resume a previous calculation w/o recalculating everything (needs the same run command and work dir!)
 
     ${c_yellow}Caching:${c_reset}
     --condaCacheDir         Location for storing the conda environments [default: $params.condaCacheDir]
