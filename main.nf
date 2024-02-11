@@ -155,7 +155,7 @@ def helpMSG() {
     --evalue            Evalue for DIAMOND protein search [default: $params.evalue]
     --seqidentity       Sequence identity for DIAMOD alignments [default: $params.seqidentity]
     --alnlength         Alignment length for DIAMOND hits [default: $params.alnlength]
-    --blastp            Use BLASTP instead of DIAMOND for protein alignment (slower, as in the original 2014 publication) [default: $params.blastp]
+    --blastp            Use BLASTP instead of DIAMOND for protein alignment (slower but as in the original 2014 publication) [default: $params.blastp]
 
     ${c_dim}Nextflow options:
     -with-report rep.html    cpu / ram usage (may cause errors)
