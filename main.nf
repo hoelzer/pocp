@@ -28,23 +28,27 @@ if (params.genome && params.protein) {exit 1, "provide only one input, use eithe
 // print if default params are used:
 if (params.evalue == '1e-5' && params.seqidentity == 0.4 && params.alnlength == 0.5 && !params.blastp ) {
   if ( !workflow.revision ) { 
-  println "\u001B[32mPOCP-nf was executed \033[0;31mwithout a stable release version\033[0m\u001B[32m and default paramters (e-value ${params.evalue}, sequence identity ${params.seqidentity}, alignment length ${params.alnlength}), according to the original definition by Qin et al. (2014)."
+  println "\u001B[32mPOCP-nf was executed \033[0;31mwithout a stable release version\033[0m\u001B[32m and default paramters according to the original publication by Qin et al. (2014)."
   } else {
-  println "\u001B[32mPOCP-nf was executed in version '${workflow.revision}' with default paramters (e-value ${params.evalue}, sequence identity ${params.seqidentity}, alignment length ${params.alnlength}), according to the original definition by Qin et al. (2014)."
+  println "\u001B[32mPOCP-nf was executed in version '${workflow.revision}' with default paramters according to the original publication by Qin et al. (2014)."
   }
   println ""
+  println "e-value used:\t\t${params.evalue}"
+  println "Sequence identity used:\t${params.seqidentity}"
+  println "Alignment length used:\t${params.alnlength}"
+  println ""  
   println "\033[0m"
   // print if NO default params are used
 } else {
   if ( !workflow.revision ) { 
-  println "\033[0;31mPOCP-nf was executed without a stable release version and non-default paramters in comparison to the original definition by Qin et al. (2014)."
+  println "\033[0;31mPOCP-nf was executed without a stable release version and non-default paramters in comparison to the original publication by Qin et al. (2014)."
   println ""
   println "e-value used:\t\t${params.evalue}\t(original definition: 1e-5)"
   println "Sequence identity used:\t${params.seqidentity}\t(original definition: 0.4)"
   println "Alignment length used:\t${params.alnlength}\t(original definition: 0.5)"
   println ""  
   } else {
-  println "\033[0;31mPOCP-nf was executed in version '${workflow.revision}' with non-default paramters in comparison to the original definition by Qin et al. (2014)."
+  println "\033[0;31mPOCP-nf was executed in version '${workflow.revision}' with non-default paramters in comparison to the original publication by Qin et al. (2014)."
   println ""
   println "e-value used:\t\t${params.evalue}\t(original definition: 1e-5)"
   println "Sequence identity used:\t${params.seqidentity}\t(original definition: 0.4)"
