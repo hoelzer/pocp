@@ -30,7 +30,7 @@ if (params.evalue == '1e-5' && params.seqidentity == 0.4 && params.alnlength == 
   if ( !workflow.revision ) { 
   println "\u001B[32mPOCP-nf was executed \033[0;31mwithout a stable release version\033[0m\u001B[32m and default paramters (e-value ${params.evalue}, sequence identity ${params.seqidentity}, alignment length ${params.alnlength}), according to the original definition by Qin et al. (2014)."
   } else {
-  println "\u001B[32mPOCP-nf was executed in version ${workflow.revision} with default paramters (e-value ${params.evalue}, sequence identity ${params.seqidentity}, alignment length ${params.alnlength}), according to the original definition by Qin et al. (2014)."
+  println "\u001B[32mPOCP-nf was executed in version '${workflow.revision}' with default paramters (e-value ${params.evalue}, sequence identity ${params.seqidentity}, alignment length ${params.alnlength}), according to the original definition by Qin et al. (2014)."
   }
   println ""
   println "\033[0m"
@@ -45,7 +45,7 @@ if (params.evalue == '1e-5' && params.seqidentity == 0.4 && params.alnlength == 
   println ""  
   println "in comparison to the original definition by Qin et al. (2014)."
   } else {
-  println "\033[0;31mPOCP-nf was executed in version ${workflow.revision} with non-default paramters"
+  println "\033[0;31mPOCP-nf was executed in version '${workflow.revision}' with non-default paramters"
   println ""
   println "e-value used:\t\t${params.evalue}\t(original definition: 1e-5)"
   println "Sequence identity used:\t${params.seqidentity}\t(original definition: 0.4)"
