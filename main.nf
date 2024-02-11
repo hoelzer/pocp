@@ -33,9 +33,9 @@ if (params.evalue == '1e-5' && params.seqidentity == 0.4 && params.alnlength == 
   println "\u001B[32mPOCP-nf was executed in version '${workflow.revision}' with default paramters according to the original publication by Qin et al. (2014)."
   }
   println ""
-  println "e-value used:\t\t${params.evalue}"
-  println "Sequence identity used:\t${params.seqidentity}"
-  println "Alignment length used:\t${params.alnlength}"
+  println "e-value:\t\t${params.evalue}"
+  println "Sequence identity:\t${params.seqidentity}"
+  println "Alignment length:\t${params.alnlength}"
   println "\033[0m"
   // print if NO default params are used
 } else {
