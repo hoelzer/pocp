@@ -122,6 +122,8 @@ Using five bacteria data sets spanning 15 to 167 input genomes, I calculated tha
 --alnlength 0.5
 ```
 
+**A warning will be shown by the pipeline if you change these parameters.**
+
 <a name="allvsall"></a>
 
 ## All-vs-All and One-vs-All
