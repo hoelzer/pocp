@@ -59,8 +59,6 @@ if (params.evalue == '1e-5' && params.seqidentity == 0.4 && params.alnlength == 
   println "\033[0m"
 }
 
-
-
 // genomes fasta input & --list support
 if (params.genomes && params.list) { genome_input_ch = Channel
   .fromPath( params.genomes, checkIfExists: true )
