@@ -9,12 +9,12 @@
 [![Twitter Follow](https://img.shields.io/twitter/follow/martinhoelzer.svg?style=social)](https://twitter.com/martinhoelzer) 
 
 1. [ Objective ](#objective)
-2. [ How ](#how)
+2. [ How? ](#how)
 3. [ Requirements ](#need)
 4. [ Execution examples ](#run)
 5. [ Example output ](#example)
 6. [ Extend a calculation with more genomes ](#extend)
-7. [ A note on alignment calculation (DIAMOND vs. BLASTP) ](#diamond)
+7. [ A note on alignment calculation (DIAMOND vs. BLASTP) and benchmarking ](#diamond)
 8. [ Parameter adjustments (danger zone) ](#parameter)
 9. [ All-vs-All and One-vs-All ](#allvsall)
 10. [ Cite ](#cite)
@@ -28,7 +28,7 @@ Sequence technology advancements have led to an exponential increase in bacteria
 
 <a name="how"></a>
 
-## How
+## How?
 
 As input use one amino acid sequence FASTA file per genome such as provided by
 [Prokka](https://github.com/tseemann/prokka) or [Bakta](https://github.com/oschwengers/bakta) or genome FASTA files which will be then annotated via [Prokka](https://github.com/tseemann/prokka) automatically. The pipeline will then calculate all-vs-all pairwise alignments between all protein sequences using the blastp mode of [DIAMOND](https://www.nature.com/articles/nmeth.3176) and use this information for POCP calculation following the original formula of [Qin, Xie _et al_. 2014](https://www.ncbi.nlm.nih.gov/pubmed/24706738). One-vs-all comparisons are also possible, see below.
@@ -102,9 +102,13 @@ nextflow run hoelzer/pocp -r 2.3.0 --genomes 'input/*.fasta' -profile local,dock
 
 <a name="diamond"></a>
 
-## A note on alignment calculation (DIAMOND vs. BLASTP)
+## A note on alignment calculation (DIAMOND vs. BLASTP) and benchmarking
 
 The pipeline identifies orthologous proteins between species using DIAMOND in blastp mode. Please note that the original POCP publication used BLASTP for calculating the alignments. However, DIAMOND is not only faster, which is an advantage when calculating POCP values for larger input data sets, but also achieves the sensitivity of BLASTP ([Buchfink (2021)](https://www.nature.com/articles/s41592-021-01101-x)), especially when using the `--ultra-sensitive` mode, which is activated by default in the pipeline. Another study comparing different alignment programs found that DIAMOND offered the best compromise between speed, sensitivity and quality when a sensitivity option other than the default setting was selected ([Hernández-Salmerón and Moreno-Hagelsieb (2020)](https://bmcgenomics.biomedcentral.com/articles/10.1186/s12864-020-07132-6)). Therefore I decided to use DIAMOND as a more modern solution for the alignment calculation in POCP-nf. Thx [@michoug](https://github.com/michoug) for the idea and the Pull Request.
+
+Using five bacteria data sets spanning 15 to 167 input genomes, I calculated that the **average difference in percentage of POCP scores is ~0.2 %** between using BLASTP or DIAMOND in `--ultra-sensitive` mode. The runtime (without Prokka annotation, `--proteins` input) for 44 _Enterococcus_ genomes (comprising 1,892 pairwise comparisons) is halved from 10h 12m (BLASTP) to 5h 30m (DIAMOND) on a laptop with 8 cores.
+
+**If you are interested in more details, [check out this little benchmark](blastp-vs-diamond-benchmark/README.md).**
 
 <a name="parameter"></a>
 
