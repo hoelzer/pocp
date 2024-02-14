@@ -4,8 +4,8 @@ species_list = []
 #File.open('blastp/pocp-matrix.tsv','r').each do |line|
 #File.open('results-brucella/blastp/pocp-matrix.tsv','r').each do |line|
 #File.open('results-enterococcus/blastp/pocp-matrix.tsv','r').each do |line|
-File.open('results-chlamydia/blastp/pocp-matrix.tsv','r').each do |line|
-#File.open('results-klebsiella/blastp/pocp-matrix.tsv','r').each do |line|
+#File.open('results-chlamydia/blastp/pocp-matrix.tsv','r').each do |line|
+File.open('results-klebsiella/blastp/pocp-matrix.tsv','r').each do |line|
     s = line.split("\t")
     next if line.start_with?('ID')
     species = s[0]
@@ -21,8 +21,8 @@ pocp_diamond = {}
 #File.open('diamond/pocp-matrix.tsv','r').each do |line|
 #File.open('results-brucella/diamond/pocp-matrix.tsv','r').each do |line|
 #File.open('results-enterococcus/diamond/pocp-matrix.tsv','r').each do |line|
-File.open('results-chlamydia/diamond/pocp-matrix.tsv','r').each do |line|
-#File.open('results-klebsiella/diamond/pocp-matrix.tsv','r').each do |line|
+#File.open('results-chlamydia/diamond/pocp-matrix.tsv','r').each do |line|
+File.open('results-klebsiella/diamond/pocp-matrix.tsv','r').each do |line|
     s = line.split("\t")
     next if line.start_with?('ID')
     species = s[0]
@@ -84,8 +84,8 @@ end
 #output = File.open('pocp-diff.tsv','w')
 #output = File.open('brucella-pocp-diff.tsv','w')
 #output = File.open('enterococcus-pocp-diff.tsv','w')
-output = File.open('chlamydia-pocp-diff.tsv','w')
-#output = File.open('klebsiella-pocp-diff.tsv','w')
+#output = File.open('chlamydia-pocp-diff.tsv','w')
+output = File.open('klebsiella-pocp-diff.tsv','w')
 output << "ID\t#{species_list_sorted.join("\t")}\n"
 i = 0
 pocp_diff.each do |species, pocp_array|

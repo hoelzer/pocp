@@ -5,7 +5,8 @@ import numpy as np
 
 # Read the TSV file
 #data = pd.read_csv("pocp-diff.tsv", sep="\t", index_col=0)
-data = pd.read_csv("pocp-diff-old-vs-new-blast.tsv", sep="\t", index_col=0)
+#data = pd.read_csv("pocp-diff-old-vs-new-blast.tsv", sep="\t", index_col=0)
+data = pd.read_csv("pocp-diff-old-vs-new-diamond.tsv", sep="\t", index_col=0)
 #data = pd.read_csv("brucella-pocp-diff.tsv", sep="\t", index_col=0)
 #data = pd.read_csv("enterococcus-pocp-diff.tsv", sep="\t", index_col=0)
 
@@ -45,7 +46,8 @@ plt.yticks(rotation=0)
 
 # Save the figure as an SVG file
 #heatmap.get_figure().savefig("pocp-diff.svg", format="svg", bbox_inches="tight")
-heatmap.get_figure().savefig("pocp-diff-old-vs-new-blast.svg", format="svg", bbox_inches="tight")
+#heatmap.get_figure().savefig("pocp-diff-old-vs-new-blast.svg", format="svg", bbox_inches="tight")
+heatmap.get_figure().savefig("pocp-diff-old-vs-new-diamond.svg", format="svg", bbox_inches="tight")
 #heatmap.get_figure().savefig("brucella-pocp-diff.svg", format="svg", bbox_inches="tight")
 #heatmap.get_figure().savefig("enterococcus-pocp-diff.svg", format="svg", bbox_inches="tight")
 

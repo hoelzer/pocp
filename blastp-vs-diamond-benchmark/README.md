@@ -55,6 +55,6 @@ In addition, I also compared BLASTP and DIAMOND within POCP-nf on four other dat
 * 0.17 % for _Enterococcus_
 * 0.09 % for _Brucella_
 * 0.19 % for _Chlamydia_
-* 0.23 % for _Klebsiella_
+* 0.06 % for _Klebsiella_
 
 Please also note the differences in runtime. The runtime (without Prokka annotation) for 44 _Enterococcus_ genomes (comprising 1,892 pairwise comparisons) is halved from 10h 12m (BLASTP) to 5h 30m (DIAMOND) on a laptop with 8 cores. The _Klebsiella_ dataset, which includes 167 genomes, requires even 27,722 pairwise reciprocal alignment comparisons. 
