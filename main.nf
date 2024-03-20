@@ -28,7 +28,7 @@ if (params.genome && params.protein) {exit 1, "provide only one input, use eithe
 String tool = "DIAMOND"
 if (params.blastp) { tool = "BLASTP"}
 // print if default params are used
-if (params.evalue == '1e-5' && params.seqidentity == 0.4 && params.alnlength == 0.5 && !params.blastp ) {
+if (params.evalue == '1e-5' && params.seqidentity == 0.4 && params.alnlength == 0.5) {
   if ( !workflow.revision ) { 
   println "\u001B[32mPOCP-nf was executed \033[0;31mwithout a stable release version\033[0m\u001B[32m and default paramters according to the original publication by Qin et al. (2014). ${tool} was used for protein alignments."
   } else {
