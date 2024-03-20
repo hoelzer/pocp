@@ -25,12 +25,14 @@ if (params.help) { exit 0, helpMSG() }
 if (params.genomes == '' && params.proteins == '') {exit 1, "input missing, use either [--genomes] or [--proteins]"}
 if (params.genomes != '' && params.proteins != '') {exit 1, "provide one input, use either [--genomes] or [--proteins]"}
 if (params.genome && params.protein) {exit 1, "provide only one input, use either [--genome] or [--protein]"}
-// print if default params are used:
-if (params.evalue == '1e-5' && params.seqidentity == 0.4 && params.alnlength == 0.5 && !params.blastp ) {
+String tool = "DIAMOND"
+if (params.blastp) { tool = "BLASTP"}
+// print if default params are used
+if (params.evalue == '1e-5' && params.seqidentity == 0.4 && params.alnlength == 0.5) {
   if ( !workflow.revision ) { 
-  println "\u001B[32mPOCP-nf was executed \033[0;31mwithout a stable release version\033[0m\u001B[32m and default paramters according to the original publication by Qin et al. (2014)."
+  println "\u001B[32mPOCP-nf was executed \033[0;31mwithout a stable release version\033[0m\u001B[32m and default paramters according to the original publication by Qin et al. (2014). ${tool} was used for protein alignments."
   } else {
-  println "\u001B[32mPOCP-nf was executed in version '${workflow.revision}' with default paramters according to the original publication by Qin et al. (2014)."
+  println "\u001B[32mPOCP-nf was executed in version '${workflow.revision}' with default paramters according to the original publication by Qin et al. (2014). ${tool} was used for protein alignments."
   }
   println ""
   println "e-value:\t\t${params.evalue}"
@@ -40,20 +42,20 @@ if (params.evalue == '1e-5' && params.seqidentity == 0.4 && params.alnlength == 
   // print if NO default params are used
 } else {
   if ( !workflow.revision ) { 
-  println "\033[0;31mPOCP-nf was executed without a stable release version and non-default paramters in comparison to the original publication by Qin et al. (2014)."
+  println "\033[0;31mPOCP-nf was executed without a stable release version and non-default paramters in comparison to the original publication by Qin et al. (2014). ${tool} was used for protein alignments."
   println ""
   println "e-value used:\t\t${params.evalue}\t(original definition: 1e-5)"
   println "Sequence identity used:\t${params.seqidentity}\t(original definition: 0.4)"
   println "Alignment length used:\t${params.alnlength}\t(original definition: 0.5)"
   } else {
-  println "\033[0;31mPOCP-nf was executed in version '${workflow.revision}' with non-default paramters in comparison to the original publication by Qin et al. (2014)."
+  println "\033[0;31mPOCP-nf was executed in version '${workflow.revision}' with non-default paramters in comparison to the original publication by Qin et al. (2014). ${tool} was used for protein alignments."
   println ""
   println "e-value used:\t\t${params.evalue}\t(original definition: 1e-5)"
   println "Sequence identity used:\t${params.seqidentity}\t(original definition: 0.4)"
   println "Alignment length used:\t${params.alnlength}\t(original definition: 0.5)"
   }
   println ""
-  println "This will change your POCP results."
+  println "This might change your POCP results slightly."
   println "If you really want to use adjusted parameters, you must report them together with the used version of POCP-nf to ensure reproducibility!"
   println ""
   println "\033[0m"
