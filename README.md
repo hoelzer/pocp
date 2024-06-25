@@ -24,7 +24,7 @@
 
 ## Objective
 
-Sequence technology advancements have led to an exponential increase in bacterial genomes, necessitating robust taxonomic classification methods. The **P**ercentage **O**f **C**onserved **P**roteins (POCP), proposed initially by [Qin, Xie _et al_. 2014](https://www.ncbi.nlm.nih.gov/pubmed/24706738), is a valuable metric for assessing prokaryote genus boundaries. A prokaryotic genus can be defined as a group of species with all pairwise POCP values higher than 50%. Here, I introduce a computational pipeline for automated POCP calculation, aiming to enhance reproducibility and ease of use in taxonomic studies ([see publication in OUP Bioinformatics]((https://academic.oup.com/bioinformatics/article/40/4/btae175/7638801))).
+Sequence technology advancements have led to an exponential increase in bacterial genomes, necessitating robust taxonomic classification methods. The **P**ercentage **O**f **C**onserved **P**roteins (POCP), proposed initially by [Qin, Xie _et al_. 2014](https://www.ncbi.nlm.nih.gov/pubmed/24706738), is a valuable metric for assessing prokaryote genus boundaries. A prokaryotic genus can be defined as a group of species with all pairwise POCP values higher than 50%. Here, I introduce a computational pipeline for automated POCP calculation, aiming to enhance reproducibility and ease of use in taxonomic studies ([see publication in OUP Bioinformatics](https://academic.oup.com/bioinformatics/article/40/4/btae175/7638801)).
 
 <a name="how"></a>
 
