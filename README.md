@@ -24,7 +24,7 @@
 
 ## Objective
 
-Sequence technology advancements have led to an exponential increase in bacterial genomes, necessitating robust taxonomic classification methods. The **P**ercentage **O**f **C**onserved **P**roteins (POCP), proposed initially by [Qin, Xie _et al_. 2014](https://www.ncbi.nlm.nih.gov/pubmed/24706738), is a valuable metric for assessing prokaryote genus boundaries. A prokaryotic genus can be defined as a group of species with all pairwise POCP values higher than 50%. Here, I introduce a computational pipeline for automated POCP calculation, aiming to enhance reproducibility and ease of use in taxonomic studies.
+Sequence technology advancements have led to an exponential increase in bacterial genomes, necessitating robust taxonomic classification methods. The **P**ercentage **O**f **C**onserved **P**roteins (POCP), proposed initially by [Qin, Xie _et al_. 2014](https://www.ncbi.nlm.nih.gov/pubmed/24706738), is a valuable metric for assessing prokaryote genus boundaries. A prokaryotic genus can be defined as a group of species with all pairwise POCP values higher than 50%. Here, I introduce a computational pipeline for automated POCP calculation, aiming to enhance reproducibility and ease of use in taxonomic studies ([see publication in OUP Bioinformatics]((https://academic.oup.com/bioinformatics/article/40/4/btae175/7638801))).
 
 <a name="how"></a>
 
@@ -138,7 +138,7 @@ If you use the POCP Nextflow pipeline, please cite the original POCP study that 
 
 [Qin, Qi-Long, _et al_. "A proposed genus boundary for the prokaryotes based on genomic insights." Journal of bacteriology 196.12 (2014): 2210-2215.](https://pubmed.ncbi.nlm.nih.gov/24706738/)
 
-[Martin Hölzer. "POCP: An automatic Nextflow pipeline for calculating the percentage of conserved proteins in bacterial taxonomy". SOME JOURNAL. Hopefully in 2024.]()
+[Martin Hölzer. "POCP-nf: an automatic Nextflow pipeline for calculating the percentage of conserved proteins in bacterial taxonomy". Bioinformatics. 2024.](https://academic.oup.com/bioinformatics/article/40/4/btae175/7638801)
 
 [Buchfink, Benjamin, Chao Xie, and Daniel H. Huson. "Fast and sensitive protein alignment using DIAMOND." Nature methods 12.1 (2015): 59-60.](https://www.nature.com/articles/nmeth.3176)
 
