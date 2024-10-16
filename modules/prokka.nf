@@ -10,6 +10,7 @@ process prokka {
 
   output:
     tuple val(name), path("${name}/${name}.faa"), emit: proteins
+    tuple val(name), path("${name}/${name}.gff"), emit: annotations
 
   script:
     """
