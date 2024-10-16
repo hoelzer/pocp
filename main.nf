@@ -106,13 +106,13 @@ include {pocp; pocp_matrix} from './modules/pocp'
 // main workflow
 workflow {
     if (params.genomes) {
-      proteins_ch = prokka(genome_input_ch)
+      proteins_ch = prokka(genome_input_ch).proteins
     } else {
       proteins_ch = proteins_input_ch
     }
 
     // switch to one-vs-all
-    if (params.genome) { protein_ch = prokka_single(genome_single_input_ch) }
+    if (params.genome) { protein_ch = prokka_single(genome_single_input_ch).proteins }
     if (params.protein) { protein_ch = protein_single_input_ch }
 
     if (params.genome || params.protein) {
