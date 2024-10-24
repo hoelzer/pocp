@@ -154,6 +154,8 @@ If you use the POCP Nextflow pipeline, please cite the original POCP study that 
 
 ## Updates backlog
 
+__Update 20234/120: Automatically plot a heatmap of pairwise POCP values. Check `--help` message.__
+
 __Update 2023/12: One-vs-All comparisons are now possible in genome and protein input mode. Check `--help` message.__
 
 __Update 2023/10: Now using [Diamond](https://www.nature.com/articles/s41592-021-01101-x) instead of Blastp for protein alignments. Thx [@michoug](https://github.com/michoug) for the Pull Request.__
