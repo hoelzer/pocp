@@ -102,6 +102,7 @@ include {prokka as prokka; prokka as prokka_single} from './modules/prokka'
 include {blast} from './modules/blast'
 include {diamond} from './modules/diamond'
 include {pocp; pocp_matrix} from './modules/pocp'
+include {plot} from './modules/plot'
 
 // main workflow
 workflow {
@@ -145,6 +146,8 @@ workflow {
     pocp_matrix(
       pocp(hits_ch).map {comparison, pocp_file, pocp_value -> [pocp_file]}.collect()
     )
+
+    plot(pocp_matrix.out)
 }
 
 // --help
