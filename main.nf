@@ -193,6 +193,8 @@ def helpMSG() {
     --max_cores         Max cores (in total) for local use [default: $params.max_cores]
     --memory            Max memory for local use [default: $params.memory]
     --output            Name of the result folder [default: $params.output]
+    --width             Width in inches for the heatmap POCP plot [default: $params.width]
+    --heigth            Height in inches for the heatmap POCP plot [default: $params.width]
 
     ${c_yellow}Special Options${c_reset} ${c_red}(Danger Zone!)${c_yellow}:${c_reset}
     ATTENTION: changing these parameters will lead to different POCP values. 

@@ -11,7 +11,7 @@ process plot {
     
     script:
     """
-    plot-heatmap.py 
+    plot-heatmap.py --width ${params.width} --height ${params.height}
     """
 
 }
