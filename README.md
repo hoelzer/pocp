@@ -63,16 +63,16 @@ nextflow pull hoelzer/pocp
 nextflow info hoelzer/pocp 
 
 # get the help page and define a release version. ATTENTION: use latest version. 
-nextflow run hoelzer/pocp -r 2.3.0 --help
+nextflow run hoelzer/pocp -r 2.3.4 --help
 
 # example with genome files as input, all-vs-all comparison, performing a local execution and using Docker
-nextflow run hoelzer/pocp -r 2.3.0 --genomes $HOME'/.nextflow/assets/hoelzer/pocp/example/*.fasta' -profile local,docker
+nextflow run hoelzer/pocp -r 2.3.4 --genomes $HOME'/.nextflow/assets/hoelzer/pocp/example/*.fasta' -profile local,docker
 
 # example with protein FASTA files as input (e.g. from Prokka pre-calculated), all-vs-all comparison, performing a SLURM execution and using conda
-nextflow run hoelzer/pocp -r 2.3.0 --proteins $HOME'/.nextflow/assets/hoelzer/pocp/example/*.faa' -profile slurm,conda
+nextflow run hoelzer/pocp -r 2.3.4 --proteins $HOME'/.nextflow/assets/hoelzer/pocp/example/*.faa' -profile slurm,conda
 
 # example with genome files as input, additional genome file to activate one-vs-all comparison, performing a local execution and using Docker
-nextflow run hoelzer/pocp -r 2.3.0 --genomes $HOME'/.nextflow/assets/hoelzer/pocp/example/*.fasta' --genome $HOME/.nextflow/assets/hoelzer/pocp/example/Cav_10DC88.fasta -profile local,docker
+nextflow run hoelzer/pocp -r 2.3.4 --genomes $HOME'/.nextflow/assets/hoelzer/pocp/example/*.fasta' --genome $HOME/.nextflow/assets/hoelzer/pocp/example/Cav_10DC88.fasta -profile local,docker
 ```
 
 <a name="example"></a>
@@ -81,7 +81,13 @@ nextflow run hoelzer/pocp -r 2.3.0 --genomes $HOME'/.nextflow/assets/hoelzer/poc
 
 The final output (`pocp-matrix.tsv`) should look like this (here, the resulting TSV was imported into Numbers on MacOS):
 
-![Example output](example_output.png)
+![Example table](example_output.png)
+
+The pipeline will also plot a heatmap based on this table:
+
+![Example heatmap](example_heatmap.png)
+
+The default width is 16 inches and the default height is 8 inches. You can change this using the `--width` and `--height` parameters. 
 
 <a name="extend"></a>
 
@@ -147,6 +153,8 @@ If you use the POCP Nextflow pipeline, please cite the original POCP study that 
 <a name="backlog"></a>
 
 ## Updates backlog
+
+__Update 20234/120: Automatically plot a heatmap of pairwise POCP values. Check `--help` message.__
 
 __Update 2023/12: One-vs-All comparisons are now possible in genome and protein input mode. Check `--help` message.__
 

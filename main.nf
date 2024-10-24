@@ -102,6 +102,7 @@ include {prokka as prokka; prokka as prokka_single} from './modules/prokka'
 include {blast} from './modules/blast'
 include {diamond} from './modules/diamond'
 include {pocp; pocp_matrix} from './modules/pocp'
+include {plot} from './modules/plot'
 
 // main workflow
 workflow {
@@ -145,6 +146,8 @@ workflow {
     pocp_matrix(
       pocp(hits_ch).map {comparison, pocp_file, pocp_value -> [pocp_file]}.collect()
     )
+
+    plot(pocp_matrix.out)
 }
 
 // --help
@@ -190,6 +193,8 @@ def helpMSG() {
     --max_cores         Max cores (in total) for local use [default: $params.max_cores]
     --memory            Max memory for local use [default: $params.memory]
     --output            Name of the result folder [default: $params.output]
+    --width             Width in inches for the heatmap POCP plot [default: $params.width]
+    --heigth            Height in inches for the heatmap POCP plot [default: $params.height]
 
     ${c_yellow}Special Options${c_reset} ${c_red}(Danger Zone!)${c_yellow}:${c_reset}
     ATTENTION: changing these parameters will lead to different POCP values. 
