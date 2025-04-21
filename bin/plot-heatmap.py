@@ -65,4 +65,4 @@ heatmap.get_figure().savefig("pocp-heatmap.svg", format="svg", bbox_inches="tigh
 heatmap.get_figure().savefig("pocp-heatmap.pdf", format="pdf", bbox_inches="tight")
 
 # Optional: Show the plot interactively
-plt.show()
+# plt.show()
