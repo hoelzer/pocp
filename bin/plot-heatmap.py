@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -43,17 +41,28 @@ heatmap = sns.heatmap(combined_df, cmap="viridis", annot=True, fmt=".1f", linewi
 # Move the x-axis labels to the top
 plt.tick_params(top=True, labeltop=True, bottom=False, labelbottom=False)
 
+# Decide whether to rotate top x-axis labels
+renderer = plt.gcf().canvas.get_renderer()
+label_widths = [label.get_window_extent(renderer=renderer).width for label in heatmap.get_xticklabels()]
+total_label_width = sum(label_widths)
+fig_width_px = plt.gcf().bbox.width
+
+if total_label_width * 2 > fig_width_px:
+    plt.xticks(rotation=90)  # Rotate to vertical if overlapping
+else:
+    plt.xticks(rotation=0)
+
+# Rotate y-axis labels for better readability
+plt.yticks(rotation=0)
+
 # Set axis labels and plot title
 plt.xlabel("")
 plt.ylabel("")
 plt.title("Pairwise percentage of conserved proteins (POCP)", fontweight="bold")
 
-# Rotate y-axis labels for better readability
-plt.yticks(rotation=0)
-
-# Save the figure as an SVG file
+# Save the figure as an SVG and PDF file
 heatmap.get_figure().savefig("pocp-heatmap.svg", format="svg", bbox_inches="tight")
 heatmap.get_figure().savefig("pocp-heatmap.pdf", format="pdf", bbox_inches="tight")
 
-# Show the plot
-#plt.show()
+# Optional: Show the plot interactively
+# plt.show()
