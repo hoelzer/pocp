@@ -213,7 +213,7 @@ def helpMSG() {
 
     ${c_yellow}Caching:${c_reset}
     --condaCacheDir         Location for storing the conda environments [default: $params.condaCacheDir]
-    --singularityCacheDir   Location for storing the Singularity images [default: $params.condaCacheDir]
+    --singularityCacheDir   Location for storing the Singularity images [default: $params.singularityCacheDir]
     -w                      Working directory for all intermediate results [default: work] 
 
     ${c_yellow}Execution/Engine profiles:${c_reset}
