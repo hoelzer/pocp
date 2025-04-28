@@ -1,6 +1,7 @@
 name: diamond
 channels:
   - bioconda
+  - conda-forge
 dependencies:
   - diamond=2.1.10
   - python=3.11.4

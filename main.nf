@@ -19,6 +19,7 @@ if ( !workflow.revision ) {
   println "\033[0;33mWARNING: It is recommended to use a stable relese version via -r." 
   println "Use 'nextflow info hoelzer/pocp' to check for available release versions.\033[0m\n"
 }
+
 // help
 if (params.help) { exit 0, helpMSG() }
 // input error codes
@@ -213,7 +214,7 @@ def helpMSG() {
 
     ${c_yellow}Caching:${c_reset}
     --condaCacheDir         Location for storing the conda environments [default: $params.condaCacheDir]
-    --singularityCacheDir   Location for storing the Singularity images [default: $params.condaCacheDir]
+    --singularityCacheDir   Location for storing the Singularity images [default: $params.singularityCacheDir]
     -w                      Working directory for all intermediate results [default: work] 
 
     ${c_yellow}Execution/Engine profiles:${c_reset}
