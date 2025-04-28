@@ -19,6 +19,7 @@ if ( !workflow.revision ) {
   println "\033[0;33mWARNING: It is recommended to use a stable relese version via -r." 
   println "Use 'nextflow info hoelzer/pocp' to check for available release versions.\033[0m\n"
 }
+
 // help
 if (params.help) { exit 0, helpMSG() }
 // input error codes
