@@ -6,7 +6,7 @@
 ![](https://img.shields.io/badge/can_use-singularity-orange.svg)
 ![](https://img.shields.io/badge/licence-GLP3-lightgrey.svg)
 
-[![Twitter Follow](https://img.shields.io/twitter/follow/martinhoelzer.svg?style=social)](https://twitter.com/martinhoelzer) 
+[![Bluesky Followers](https://img.shields.io/bluesky/followers/martinhoelzer.bsky.social)](https://bsky.app/profile/martinhoelzer.bsky.social) 
 
 1. [ Objective ](#objective)
 2. [ How? ](#how)
