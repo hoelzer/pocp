@@ -2,8 +2,8 @@
 
 process prokka {
   label 'prokka'
-  publishDir "${params.output}/prokka", mode: 'copy', pattern: "${name}/${name}.faa" 
-  publishDir "${params.output}/prokka", mode: 'copy', pattern: "${name}/${name}.gff" 
+  publishDir "${params.output}/prokka", mode: 'copy', pattern: "*/*.faa"
+  publishDir "${params.output}/prokka", mode: 'copy', pattern: "*/*.gff"
 
   input: 
     tuple val(name), path(fasta)
@@ -15,5 +15,12 @@ process prokka {
   script:
     """
     prokka --gcode ${params.gcode} --cpus ${task.cpus} --outdir ${name} --prefix ${name} ${fasta}
+    """
+
+  stub:
+    """
+    mkdir -p ${name}
+    printf '>${name}_00001 hypothetical protein\\nMSKV\\n' > ${name}/${name}.faa
+    touch ${name}/${name}.gff
     """
 }

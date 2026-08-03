@@ -1,6 +1,7 @@
 # Calculation of the Percentage Of Conserved Proteins
 
-![](https://img.shields.io/badge/nextflow->=20.01.0-brightgreen)
+![](https://img.shields.io/badge/nextflow->=24.04.0-brightgreen)
+[![CI](https://github.com/hoelzer/pocp/actions/workflows/ci.yml/badge.svg)](https://github.com/hoelzer/pocp/actions/workflows/ci.yml)
 ![](https://img.shields.io/badge/can_use-conda/mamba-yellow.svg)
 ![](https://img.shields.io/badge/can_use-docker-blue.svg)
 ![](https://img.shields.io/badge/can_use-singularity-orange.svg)
@@ -17,8 +18,9 @@
 7. [ A note on alignment calculation (DIAMOND vs. BLASTP) and benchmarking ](#diamond)
 8. [ Parameter adjustments (danger zone) ](#parameter)
 9. [ All-vs-All and One-vs-All ](#allvsall)
-10. [ Cite ](#cite)
-11. [ Update backlog ](#backlog)
+10. [ Tests ](#tests)
+11. [ Cite ](#cite)
+12. [ Update backlog ](#backlog)
 
 <a name="objective"></a>
 
@@ -37,7 +39,7 @@ As input use one amino acid sequence FASTA file per genome such as provided by
 
 ## Requirements
 
-You only need `nextflow` to install and run the pipeline. `nextflow` will take care of all dependencies and install them if necessary. For installing the dependencies (such as Prokka and DIAMOND), you can choose between `conda`, `mamba`, `docker` or `singularity`. I recommend using `docker`. Then install and run the pipeline:
+You only need `nextflow` (>=24.04.0) to install and run the pipeline. `nextflow` will take care of all dependencies and install them if necessary. For installing the dependencies (such as Prokka and DIAMOND), you can choose between `conda`, `mamba`, `docker`, `singularity` or `apptainer`. I recommend using `docker`. Then install and run the pipeline:
 
 ### Workflow management
 
@@ -136,6 +138,24 @@ Using five bacteria data sets spanning 15 to 167 input genomes, I calculated tha
 
 Please also note that per default an "all-vs-all" comparison is performed based on the provided FASTA files. However, you can also switch to an "one-vs-all" comparison by additionally providing a single genome FASTA via `--genome` next to the `--genomes` input **or** a single protein multi-FASTA via `--protein` next to the `--proteins` input. In both cases, only "one-vs-all" comparisons will be performed. It is also possible to combine `--genomes` with a target `--protein` FASTA for "one-vs-all" and vice versa. 
 
+<a name="tests"></a>
+
+## Tests
+
+The pipeline comes with an [nf-test](https://www.nf-test.com/) suite that runs in stub mode, so no tool has to be installed and the whole suite takes under a minute:
+
+```bash
+nf-test test
+```
+
+You can also run the complete workflow on the bundled example data:
+
+```bash
+nextflow run . -profile test,local,docker
+```
+
+Both are executed by GitHub Actions on every push and pull request, together with `nextflow lint`.
+
 <a name="cite"></a>
 
 ## Cite
@@ -153,6 +173,8 @@ If you use the POCP Nextflow pipeline, please cite the original POCP study that 
 <a name="backlog"></a>
 
 ## Updates backlog
+
+__Update 2026/08: Compatible with the strict Nextflow language syntax. The search database is now built once per genome instead of once per comparison. In one-vs-all mode, pairs that were not compared are reported as `NA` in `pocp-matrix.tsv` and left blank in the heatmap instead of being reported as a POCP of 0.0. The raw pairwise alignment tables are no longer published by default, use `--keep_alignments` to get them back.__
 
 __Update 20234/120: Automatically plot a heatmap of pairwise POCP values. Check `--help` message.__
 

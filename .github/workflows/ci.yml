@@ -1,0 +1,112 @@
+name: CI
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  lint:
+    name: Lint Nextflow code
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Install Nextflow
+        run: |
+          curl -s https://get.nextflow.io | bash
+          sudo mv nextflow /usr/local/bin/
+
+      - name: Lint
+        run: nextflow lint main.nf modules nextflow.config configs
+
+  test:
+    name: nf-test (stub mode)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Install Nextflow
+        run: |
+          curl -s https://get.nextflow.io | bash
+          sudo mv nextflow /usr/local/bin/
+
+      - name: Install nf-test
+        run: |
+          curl -fsSL https://code.askimed.com/install/nf-test | bash
+          sudo mv nf-test /usr/local/bin/
+
+      - name: Run tests
+        run: nf-test test
+
+  run:
+    name: Full run on the example data
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Install Nextflow
+        run: |
+          curl -s https://get.nextflow.io | bash
+          sudo mv nextflow /usr/local/bin/
+
+      - name: Run all-vs-all on the bundled example proteins
+        run: nextflow run . -profile test,local,docker
+
+      - name: Check the resulting POCP matrix
+        run: |
+          python3 - <<'PY'
+          import csv, sys
+
+          with open('results/pocp-matrix.tsv') as fh:
+              rows = list(csv.reader(fh, delimiter='\t'))
+
+          ids = rows[0][1:]
+          assert len(ids) == 5, f"expected 5 strains, got {ids}"
+
+          values = {}
+          for row in rows[1:]:
+              assert row[0] in ids, f"unknown row ID {row[0]}"
+              for col, value in zip(ids, row[1:]):
+                  values[(row[0], col)] = float(value)
+
+          for strain in ids:
+              assert values[(strain, strain)] == 100.0, f"diagonal of {strain} is not 100.0"
+
+          for (a, b), value in values.items():
+              assert 0.0 <= value <= 100.0, f"POCP of {a} vs {b} out of range: {value}"
+              assert value == values[(b, a)], f"matrix is not symmetric for {a} vs {b}"
+              # all five example genomes are Chlamydia, so they are well above the genus cutoff
+              if a != b:
+                  assert value > 50.0, f"POCP of {a} vs {b} unexpectedly low: {value}"
+
+          print("POCP matrix looks good:")
+          for row in rows:
+              print("\t".join(row))
+          PY
+
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pocp-results
+          path: results/
