@@ -14,4 +14,8 @@ process plot {
     plot-heatmap.py --matrix ${pocp_matrix} --width ${params.width} --height ${params.height}
     """
 
+    stub:
+    """
+    touch pocp-heatmap.svg pocp-heatmap.pdf
+    """
 }

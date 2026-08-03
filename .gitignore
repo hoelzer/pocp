@@ -52,5 +52,13 @@ build-iPhoneSimulator/
 .nextflow*
 work/
 conda/
+singularity/
 example/*dmnd
 results/
+
+# nf-test working directory and snapshots of failed runs
+.nf-test/
+.nf-test.log
+
+# local re-analysis of the Pannekoek et al. (2016) data set for the publication
+2023-12-12-re-analyse-Pannekoek-2016/

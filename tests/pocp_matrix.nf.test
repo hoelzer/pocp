@@ -1,0 +1,51 @@
+nextflow_process {
+
+    name "pocp_matrix"
+    script "../modules/pocp.nf"
+    process "pocp_matrix"
+    profile "local,docker"
+
+    test("builds a symmetric matrix from the pairwise POCP files") {
+
+        when {
+            process {
+                """
+                input[0] = channel.fromPath("${projectDir}/tests/data/pocp/all-vs-all/*.txt").collect()
+                """
+            }
+        }
+
+        then {
+            assert process.success
+
+            def matrix = path(process.out[0][0]).readLines()
+            // IDs are sorted, so the layout does not depend on the file order
+            assert matrix[0] == "ID\tA\tB\tC"
+            assert matrix[1] == "A\t100.0\t80.5\t70.25"
+            assert matrix[2] == "B\t80.5\t100.0\t60.0"
+            assert matrix[3] == "C\t70.25\t60.0\t100.0"
+        }
+    }
+
+    test("reports pairs that were never compared as NA instead of 0.0") {
+
+        when {
+            process {
+                """
+                input[0] = channel.fromPath("${projectDir}/tests/data/pocp/one-vs-all/*.txt").collect()
+                """
+            }
+        }
+
+        then {
+            assert process.success
+
+            def matrix = path(process.out[0][0]).readLines()
+            assert matrix[0] == "ID\tA\tB\tTarget"
+            // A and B were both compared against Target, but never against each other
+            assert matrix[1] == "A\t100.0\tNA\t80.5"
+            assert matrix[2] == "B\tNA\t100.0\t60.0"
+            assert matrix[3] == "Target\t80.5\t60.0\t100.0"
+        }
+    }
+}

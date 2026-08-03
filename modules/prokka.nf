@@ -16,4 +16,11 @@ process prokka {
     """
     prokka --gcode ${params.gcode} --cpus ${task.cpus} --outdir ${name} --prefix ${name} ${fasta}
     """
+
+  stub:
+    """
+    mkdir -p ${name}
+    printf '>${name}_00001 hypothetical protein\\nMSKV\\n' > ${name}/${name}.faa
+    touch ${name}/${name}.gff
+    """
 }
