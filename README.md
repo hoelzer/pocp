@@ -1,6 +1,6 @@
 # Calculation of the Percentage Of Conserved Proteins
 
-![](https://img.shields.io/badge/nextflow->=20.01.0-brightgreen)
+![](https://img.shields.io/badge/nextflow->=24.04.0-brightgreen)
 ![](https://img.shields.io/badge/can_use-conda/mamba-yellow.svg)
 ![](https://img.shields.io/badge/can_use-docker-blue.svg)
 ![](https://img.shields.io/badge/can_use-singularity-orange.svg)
@@ -37,7 +37,7 @@ As input use one amino acid sequence FASTA file per genome such as provided by
 
 ## Requirements
 
-You only need `nextflow` to install and run the pipeline. `nextflow` will take care of all dependencies and install them if necessary. For installing the dependencies (such as Prokka and DIAMOND), you can choose between `conda`, `mamba`, `docker` or `singularity`. I recommend using `docker`. Then install and run the pipeline:
+You only need `nextflow` (>=24.04.0) to install and run the pipeline. `nextflow` will take care of all dependencies and install them if necessary. For installing the dependencies (such as Prokka and DIAMOND), you can choose between `conda`, `mamba`, `docker`, `singularity` or `apptainer`. I recommend using `docker`. Then install and run the pipeline:
 
 ### Workflow management
 
