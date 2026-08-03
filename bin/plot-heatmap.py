@@ -3,11 +3,11 @@
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
-import numpy as np
 import argparse
 
 # Set up argument parsing
 parser = argparse.ArgumentParser(description='Plot a figure with specified width and height.')
+parser.add_argument('--matrix', default='pocp-matrix.tsv', help='TSV file holding the pairwise POCP matrix')
 parser.add_argument('--width', type=float, required=True, help='Width of the figure')
 parser.add_argument('--height', type=float, required=True, help='Height of the figure')
 
@@ -15,30 +15,21 @@ parser.add_argument('--height', type=float, required=True, help='Height of the f
 args = parser.parse_args()
 
 # Read the TSV file
-data = pd.read_csv("pocp-matrix.tsv", sep="\t", index_col=0)
+data = pd.read_csv(args.matrix, sep="\t", index_col=0)
 
-# Convert values to numeric
+# Convert values to numeric, pairs that were not compared (one-vs-all mode) become NaN
+# and are drawn as empty cells
 data = data.apply(pd.to_numeric, errors="coerce")
 
 # Check if conversion is successful
-if data.isnull().values.any():
-    raise ValueError("Unable to convert all values to numeric!")
-
-# Use upper or lower triangle of the matrix
-upper_triangle = np.triu(data)
-lower_triangle = np.tril(data)
-
-# Combine upper and lower triangles
-combined_data = upper_triangle + lower_triangle - np.diag(np.diag(data))
-
-# Create a new DataFrame with the original labels
-combined_df = pd.DataFrame(combined_data, index=data.index, columns=data.columns)
+if data.isnull().values.all():
+    raise ValueError("Unable to convert any value to numeric!")
 
 # Create a heatmap using seaborn
-sns.set(font_scale=1.0)
+sns.set_theme(font_scale=1.0)
 plt.figure(figsize=(args.width, args.height))
 
-heatmap = sns.heatmap(combined_df, cmap="viridis", annot=True, fmt=".1f", linewidths=.5, square=True, cbar_kws={"shrink": 0.6})
+heatmap = sns.heatmap(data, cmap="viridis", annot=True, fmt=".1f", linewidths=.5, square=True, cbar_kws={"shrink": 0.6})
 
 # Move the x-axis labels to the top
 plt.tick_params(top=True, labeltop=True, bottom=False, labelbottom=False)
