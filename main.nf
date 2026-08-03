@@ -142,6 +142,7 @@ def printIntro() {
     println "\033[32mProfile: $workflow.profile\033[0m"
     println " "
     println "\033[2mCurrent User: $workflow.userName"
+    println "POCP-nf version: $workflow.manifest.version"
     println "Nextflow-version: $nextflow.version"
     println "Starting time: $nextflow.timestamp"
     println "Workdir location:"
@@ -262,8 +263,12 @@ def helpMSG() {
       mamba
       docker
       singularity
+      apptainer
 
     Per default: -profile local,conda is executed.
+
+    Add the ${c_green}test${c_reset} profile to run an all-vs-all comparison on the bundled example
+    data, e.g.: -profile ${c_green}test,local${c_reset},${c_blue}docker${c_reset}
 
     ${c_reset}
     """.stripIndent()
