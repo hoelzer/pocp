@@ -1,0 +1,128 @@
+nextflow_pipeline {
+
+    name "Pipeline"
+    script "../main.nf"
+
+    test("all-vs-all with protein input") {
+        options "-stub-run"
+
+        when {
+            params {
+                proteins = "${projectDir}/example/*.faa"
+                output = "${outputDir}"
+            }
+        }
+
+        then {
+            assert workflow.success
+            // 5 databases + 5*4 pairwise alignments + 10 pairs + matrix + plot
+            assert workflow.trace.tasks().size() == 37
+            assert path("${outputDir}/pocp-matrix.tsv").exists()
+            assert path("${outputDir}/pocp-heatmap.svg").exists()
+            assert path("${outputDir}/pocp").list().size() == 10
+        }
+    }
+
+    test("all-vs-all with genome input") {
+        options "-stub-run"
+
+        when {
+            params {
+                genomes = "${projectDir}/example/*.fasta"
+                output = "${outputDir}"
+            }
+        }
+
+        then {
+            assert workflow.success
+            // 5 annotations on top of the protein input case
+            assert workflow.trace.tasks().size() == 42
+        }
+    }
+
+    test("one-vs-all only compares against the single target") {
+        options "-stub-run"
+
+        when {
+            params {
+                proteins = "${projectDir}/example/*.faa"
+                protein = "${projectDir}/tests/data/target/Target_strain.faa"
+                output = "${outputDir}"
+            }
+        }
+
+        then {
+            assert workflow.success
+            // one target against 5 genomes, both directions, so 5 pairs instead of 10
+            assert path("${outputDir}/pocp").list().size() == 5
+        }
+    }
+
+    test("blastp instead of diamond") {
+        options "-stub-run"
+
+        when {
+            params {
+                proteins = "${projectDir}/example/*.faa"
+                blastp = true
+                keep_alignments = true
+                output = "${outputDir}"
+            }
+        }
+
+        then {
+            assert workflow.success
+            // the alignments come from blastp, so nothing is written by diamond
+            assert path("${outputDir}/blast").list().size() == 20
+            assert !path("${outputDir}/diamond").exists()
+        }
+    }
+
+    test("fails on duplicate sample IDs") {
+        options "-stub-run"
+
+        when {
+            params {
+                proteins = "${projectDir}/tests/data/duplicates/*/*.faa"
+                output = "${outputDir}"
+            }
+        }
+
+        then {
+            assert workflow.failed
+            assert workflow.stdout.any { it.contains('base names must be unique') }
+        }
+    }
+
+    test("fails when a single input file is given for an all-vs-all run") {
+        options "-stub-run"
+
+        when {
+            params {
+                proteins = "${projectDir}/example/Cav_10DC88.faa"
+                output = "${outputDir}"
+            }
+        }
+
+        then {
+            assert workflow.failed
+            assert workflow.stdout.any { it.contains('at least 2 are needed') }
+        }
+    }
+
+    test("fails when both genomes and proteins are given") {
+        options "-stub-run"
+
+        when {
+            params {
+                genomes = "${projectDir}/example/*.fasta"
+                proteins = "${projectDir}/example/*.faa"
+                output = "${outputDir}"
+            }
+        }
+
+        then {
+            assert workflow.failed
+        }
+    }
+}

@@ -16,6 +16,11 @@ process diamond_makedb {
     """
     diamond makedb --in ${fasta} -d ${fasta}.dmnd
     """
+
+    stub:
+    """
+    touch ${fasta}.dmnd
+    """
 }
 
 /*
@@ -38,5 +43,11 @@ process diamond {
     diamond blastp --ultra-sensitive -p ${task.cpus} -q ${fasta} -d ${db} -e ${params.evalue} --outfmt 6 qseqid sseqid pident length mismatch gapopen qstart qend qlen sstart send evalue bitscore slen | awk '{if(\$3>${params.seqidentity*100} && \$4>(\$9*${params.alnlength})){print \$0}}' > ${name}-query-${name2}-db.diamond
     awk '{print \$1}' ${name}-query-${name2}-db.diamond | sort -u | wc -l | tr -d '[:space:]' > ${name}-query-${name2}-db.diamond.hits
     echo "\t${name}:\tFound \$(cat ${name}-query-${name2}-db.diamond.hits) matches with an E value of less than ${params.evalue}, a sequence identity of more than ${params.seqidentity*100}%, and an alignable region of the query protein sequence of more than ${params.alnlength*100}%."
+    """
+
+    stub:
+    """
+    touch ${name}-query-${name2}-db.diamond
+    echo "1" > ${name}-query-${name2}-db.diamond.hits
     """
 }

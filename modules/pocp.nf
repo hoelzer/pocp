@@ -28,10 +28,15 @@ process pocp {
     POCP=\$(python -c "print((((\$c1 + \$c2) / (\$t1 + \$t2)) * 100))")
     echo \$POCP > ${genome_names}.txt
     """
+
+    stub:
+    """
+    echo "50.0" > ${genome_names}.txt
+    """
 }
 
 process pocp_matrix {
-    label 'ruby'
+    label 'python'
     publishDir "${params.output}", mode: 'copy', pattern: "pocp-matrix.tsv"
 
     input:
@@ -42,7 +47,11 @@ process pocp_matrix {
 
     script:
     """
-    pocp-matrix.rb
+    pocp-matrix.py --output pocp-matrix.tsv
     """
 
+    stub:
+    """
+    touch pocp-matrix.tsv
+    """
 }
