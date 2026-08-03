@@ -1,0 +1,5 @@
+name: ruby
+channels:
+  - conda-forge
+dependencies:
+  - ruby=3.2.2
