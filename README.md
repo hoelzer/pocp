@@ -1,6 +1,7 @@
 # Calculation of the Percentage Of Conserved Proteins
 
 ![](https://img.shields.io/badge/nextflow->=24.04.0-brightgreen)
+[![CI](https://github.com/hoelzer/pocp/actions/workflows/ci.yml/badge.svg)](https://github.com/hoelzer/pocp/actions/workflows/ci.yml)
 ![](https://img.shields.io/badge/can_use-conda/mamba-yellow.svg)
 ![](https://img.shields.io/badge/can_use-docker-blue.svg)
 ![](https://img.shields.io/badge/can_use-singularity-orange.svg)
@@ -17,8 +18,9 @@
 7. [ A note on alignment calculation (DIAMOND vs. BLASTP) and benchmarking ](#diamond)
 8. [ Parameter adjustments (danger zone) ](#parameter)
 9. [ All-vs-All and One-vs-All ](#allvsall)
-10. [ Cite ](#cite)
-11. [ Update backlog ](#backlog)
+10. [ Tests ](#tests)
+11. [ Cite ](#cite)
+12. [ Update backlog ](#backlog)
 
 <a name="objective"></a>
 
@@ -135,6 +137,24 @@ Using five bacteria data sets spanning 15 to 167 input genomes, I calculated tha
 ## All-vs-All and One-vs-All
 
 Please also note that per default an "all-vs-all" comparison is performed based on the provided FASTA files. However, you can also switch to an "one-vs-all" comparison by additionally providing a single genome FASTA via `--genome` next to the `--genomes` input **or** a single protein multi-FASTA via `--protein` next to the `--proteins` input. In both cases, only "one-vs-all" comparisons will be performed. It is also possible to combine `--genomes` with a target `--protein` FASTA for "one-vs-all" and vice versa. 
+
+<a name="tests"></a>
+
+## Tests
+
+The pipeline comes with an [nf-test](https://www.nf-test.com/) suite that runs in stub mode, so no tool has to be installed and the whole suite takes under a minute:
+
+```bash
+nf-test test
+```
+
+You can also run the complete workflow on the bundled example data:
+
+```bash
+nextflow run . -profile test,local,docker
+```
+
+Both are executed by GitHub Actions on every push and pull request, together with `nextflow lint`.
 
 <a name="cite"></a>
 

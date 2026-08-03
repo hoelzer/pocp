@@ -52,5 +52,10 @@ build-iPhoneSimulator/
 .nextflow*
 work/
 conda/
+singularity/
 example/*dmnd
 results/
+
+# nf-test working directory and snapshots of failed runs
+.nf-test/
+.nf-test.log
