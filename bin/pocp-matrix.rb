@@ -27,37 +27,37 @@
 ## produce a matrix/excel format from the POCP pairwise output files
 strains = {}
 
-Dir.glob("*-vs-*").each do |comp|
-	bn = File.basename(comp)
-  g1 = bn.split('-vs-')[0]
-  g2 = bn.split('-vs-')[1].sub('.txt','')
-  strains[g1] = [] unless strains.keys.include?(g1)
-  strains[g2] = [] unless strains.keys.include?(g2)
+Dir.glob("*-vs-*.txt").each do |comp|
+  bn = File.basename(comp, '.txt')
+  g1, g2 = bn.split('-vs-')
+  strains[g1] = [] unless strains.key?(g1)
+  strains[g2] = [] unless strains.key?(g2)
 end
 puts "Collected #{strains.keys.size} strains."
 
-strains.keys.each do |strain1|
-  strains.keys.each do |strain2|
+## sort the IDs so that the matrix layout is the same for every run
+ids = strains.keys.sort
+
+ids.each do |strain1|
+  ids.each do |strain2|
     if strain1 == strain2
       strains[strain1].push('100.0')
     else
-      comp = "#{strain1}-vs-#{strain2}.txt"
-      if File.exist?(comp)
-		    pocp = `cat #{comp}`.chomp.strip.to_f.round(4).to_s
-        strains[strain1].push(pocp)
+      comp = ["#{strain1}-vs-#{strain2}.txt", "#{strain2}-vs-#{strain1}.txt"].find { |f| File.exist?(f) }
+      if comp
+        strains[strain1].push(File.read(comp).chomp.strip.to_f.round(4).to_s)
       else
-        comp = "#{strain2}-vs-#{strain1}.txt"
-		    pocp = `cat #{comp}`.chomp.strip.to_f.round(4).to_s
-        strains[strain1].push(pocp)
+        ## in one-vs-all mode most pairs are not calculated at all, report them as
+        ## missing instead of silently writing a 0.0 POCP value
+        strains[strain1].push('NA')
       end
     end
-  end  
+  end
 end
-#puts strains
 
 out = File.open("pocp-matrix.tsv",'w')
-out << "ID\t" << strains.keys.join("\t") << "\n"
-strains.each do |strain_id, pocp_values|
-  out << "#{strain_id}\t" << pocp_values.join("\t") << "\n"
+out << "ID\t" << ids.join("\t") << "\n"
+ids.each do |strain_id|
+  out << "#{strain_id}\t" << strains[strain_id].join("\t") << "\n"
 end
 out.close

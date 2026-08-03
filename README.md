@@ -154,6 +154,8 @@ If you use the POCP Nextflow pipeline, please cite the original POCP study that 
 
 ## Updates backlog
 
+__Update 2026/08: Compatible with the strict Nextflow language syntax. The search database is now built once per genome instead of once per comparison. In one-vs-all mode, pairs that were not compared are reported as `NA` in `pocp-matrix.tsv` and left blank in the heatmap instead of being reported as a POCP of 0.0. The raw pairwise alignment tables are no longer published by default, use `--keep_alignments` to get them back.__
+
 __Update 20234/120: Automatically plot a heatmap of pairwise POCP values. Check `--help` message.__
 
 __Update 2023/12: One-vs-All comparisons are now possible in genome and protein input mode. Check `--help` message.__
